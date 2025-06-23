@@ -1,0 +1,396 @@
+/* --- 全局与基础样式 (移植自 quest-system-extension) --- */
+:root {
+    --main-bg-color: #2c2f33;
+    --section-bg-color: #23272a;
+    --text-color: #ffffff;
+    --text-muted-color: #99aab5;
+    --primary-accent-color: #7289da; /* Discord Blurple */
+    --primary-accent-hover-color: #677bc4;
+    --success-color: #43b581; /* Discord Green */
+    --warning-color: #faa61a; /* Discord Yellow */
+    --danger-color: #f04747; /* Discord Red */
+    --border-color: #40444b;
+    --font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    --border-radius: 8px;
+    --box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+}
+
+/* --- 浮动按钮 --- */
+#momo-world-book-button {
+    position: fixed;
+    z-index: 2147483645;
+    cursor: grab;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(145deg, #2f3338, #212529);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-accent-color);
+    font-size: 24px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3), 
+                inset 0 2px 2px rgba(255,255,255,0.05),
+                0 0 0 1px rgba(0,0,0,0.5);
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, color 0.2s ease-out;
+}
+
+#momo-world-book-button:hover {
+    transform: scale(1.1);
+    color: var(--primary-accent-hover-color);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.4), 
+                inset 0 2px 3px rgba(255,255,255,0.08),
+                0 0 10px var(--primary-accent-color); /* Glow effect */
+}
+
+/* --- 弹窗容器与布局 (参考 quest-system-extension 的响应式方案) --- */
+.momo-world-book-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 10001;
+    /* 覆盖层本身不负责居中，让弹窗自己定位 */
+}
+
+.momo-popup-container {
+    position: fixed;
+    top: 10vh; /* 调整：距离顶部10vh */
+    left: 10vw; /* 调整：水平居中 (100vw - 80vw) / 2 */
+    z-index: 2147483646;
+    width: 80vw; /* 调整：宽度为80vw */
+    height: 80vh; /* 调整：高度为80vh */
+    max-height: 80vh; /* 调整：与height保持一致 */
+    
+    background-color: var(--main-bg-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    
+    display: flex;
+    flex-direction: column;
+    
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+}
+
+/* --- 桌面端响应式布局 --- */
+@media (min-width: 768px) {
+    .momo-popup-container {
+        /* 在桌面端恢复居中变换 */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60vw; /* 为桌面端设置更合理的宽度 */
+        max-width: 800px; /* 保持最大宽度限制 */
+        height: 80vh; /* 保持用户要求的高度 */
+    }
+}
+
+.momo-popup-close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted-color);
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s;
+    z-index: 10;
+}
+
+.momo-popup-close-button:hover {
+    color: var(--text-color);
+}
+
+.momo-popup-body {
+    flex-grow: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 隐藏滚动条但保留功能 */
+.momo-popup-body::-webkit-scrollbar,
+.momo-book-list-container::-webkit-scrollbar {
+    display: none;
+}
+.momo-popup-body,
+.momo-book-list-container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* --- 区块样式 --- */
+.momo-section {
+    background-color: var(--section-bg-color);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.momo-section h3, .momo-section h4, .momo-section h5 {
+    margin: 0;
+    font-size: 1.2em;
+    color: var(--primary-accent-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.momo-section h4, .momo-section h5 {
+    font-size: 1.1em;
+    color: var(--text-color);
+    border-bottom: none;
+}
+.momo-section h5 {
+    font-size: 1.0em;
+    color: var(--text-muted-color);
+    margin-top: 10px;
+}
+
+/* --- 按钮和控件 --- */
+.momo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.momo-button {
+    background-color: var(--primary-accent-color);
+    color: var(--text-color);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.momo-button:hover {
+    background-color: var(--primary-accent-hover-color);
+}
+
+.momo-button:active {
+    transform: scale(0.98);
+}
+
+.momo-button.abandon { background-color: var(--danger-color); }
+
+.momo-button:disabled {
+    background-color: var(--border-color);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.momo-description {
+    font-size: 0.9em;
+    color: var(--text-muted-color);
+    line-height: 1.5;
+    margin: 0 0 10px 0;
+}
+
+.momo-no-tasks {
+    color: var(--text-muted-color);
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* --- momo 特有元素的兼容性样式 --- */
+.momo-edit-controls, .momo-modify-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.momo-select, .momo-textarea {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--main-bg-color);
+    color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    box-sizing: border-box; /* Important for consistent padding */
+}
+
+.momo-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.momo-textarea-label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: var(--text-muted-color);
+}
+
+.momo-grid-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.momo-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.momo-book-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    background-color: var(--section-bg-color);
+    border-radius: 5px;
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+}
+
+.momo-book-button {
+    background-color: #ffffff; /* 改为白色 */
+    color: #2c2f33; /* 深色文字以保证可读性 */
+    border: 1px solid #cccccc; /* 浅灰色边框 */
+    padding: 8px 12px;
+    border-radius: 15px; /* 胶囊形状 */
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    /* 新增样式以显示完整文本 */
+    white-space: normal; /* 允许文本换行 */
+    text-align: left; /* 文本左对齐 */
+    height: auto; /* 高度自适应 */
+    line-height: 1.3; /* 调整行高，使其更易读 */
+    max-width: 100%; /* 确保按钮不会超出其容器 */
+}
+
+.momo-book-button.selected {
+    background-color: var(--primary-accent-color); /* 选中后变为紫色 */
+    color: white;
+    border-color: var(--primary-accent-hover-color);
+}
+
+.momo-preset-list-container {
+    margin-top: 10px;
+    background-color: var(--section-bg-color);
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.momo-preset-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.momo-preset-item:hover {
+    background-color: var(--main-bg-color);
+}
+
+.momo-delete-preset-btn {
+    background: none;
+    border: none;
+    color: var(--danger-color);
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 0 5px;
+}
+
+.momo-version-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.momo-version-panel p {
+    margin: 0;
+}
+
+/* --- 条目迁移视图特定样式 --- */
+.momo-transfer-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* 增加控件之间的间距 */
+}
+
+/* 隐藏滚动条但保留功能 (应用到新的容器) */
+#momo-source-entries-container::-webkit-scrollbar {
+    display: none;
+}
+#momo-source-entries-container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* 复选框项目样式 */
+.momo-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%; /* 让每个项目占据一行 */
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.momo-checkbox-item:hover {
+    background-color: var(--main-bg-color);
+}
+
+.momo-checkbox-item input[type="checkbox"] {
+    /* 自定义复选框外观，使其更现代化 */
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--primary-accent-color);
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.momo-checkbox-item input[type="checkbox"]:checked {
+    background-color: var(--primary-accent-color);
+    border-color: var(--primary-accent-hover-color);
+}
+
+/* 在选中的复选框上添加一个对勾符号 */
+.momo-checkbox-item input[type="checkbox"]:checked::after {
+    content: '✔';
+    font-size: 14px;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.momo-checkbox-item label {
+    flex-grow: 1;
+    cursor: pointer;
+    color: var(--text-color);
+}
