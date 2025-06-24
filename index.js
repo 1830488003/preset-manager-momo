@@ -1376,7 +1376,7 @@ jQuery(async () => {
     }
 
     /**
-     * 从 GitHub 和 Gitee 检查更新。
+     * 从 GitHub 和 Gitee 检查更新，并提供更详细的错误反馈。
      */
     async function checkForUpdates() {
         const localVersion = "2.1.0";
@@ -1395,8 +1395,14 @@ jQuery(async () => {
 
         try {
             const results = await Promise.allSettled([
-                fetch(githubApiUrl).then(res => res.json()),
-                fetch(giteeApiUrl).then(res => res.json())
+                fetch(githubApiUrl).then(res => {
+                    if (!res.ok) throw new Error(`GitHub API 错误: ${res.status}`);
+                    return res.json();
+                }),
+                fetch(giteeApiUrl).then(res => {
+                    if (!res.ok) throw new Error(`Gitee API 错误: ${res.status}`);
+                    return res.json();
+                })
             ]);
 
             const versions = results
@@ -1404,10 +1410,23 @@ jQuery(async () => {
                 .map(result => result.value.tag_name);
 
             if (versions.length === 0) {
-                throw new Error("无法从任何源获取版本信息。");
+                const errorDetails = results
+                    .map((result, index) => {
+                        if (result.status === 'rejected') {
+                            const source = index === 0 ? 'GitHub' : 'Gitee';
+                            if (result.reason.message.includes('404')) {
+                                return `${source}: 未找到发布版本 (404)。提示：请确保仓库中已创建了“Release”。`;
+                            }
+                            return `${source}: ${result.reason.message}`;
+                        }
+                        return null;
+                    })
+                    .filter(Boolean)
+                    .join('; ');
+                
+                throw new Error(`无法获取版本信息。详情: ${errorDetails || '未知网络错误或API响应格式不正确'}`);
             }
 
-            // 找出最新的远程版本
             const latestRemoteVersion = versions.reduce((latest, current) => {
                 return compareVersions(current, latest) > 0 ? current : latest;
             }, "0.0.0");
