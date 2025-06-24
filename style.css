@@ -229,14 +229,16 @@
     gap: 10px;
 }
 
-.momo-input, .momo-select, .momo-textarea {
+.momo-popup-container .momo-input, 
+.momo-popup-container .momo-select, 
+.momo-popup-container .momo-textarea {
     width: 100%;
     padding: 10px;
-    background-color: var(--main-bg-color);
-    color: white;
+    background-color: var(--main-bg-color) !important;
+    color: var(--text-color) !important;
     border: 1px solid var(--border-color);
     border-radius: 5px;
-    box-sizing: border-box; /* Important for consistent padding */
+    box-sizing: border-box;
 }
 
 .momo-textarea {
@@ -408,11 +410,12 @@
     font-size: 0.9em;
     color: var(--text-muted-color);
 }
-.prompt-field input, .prompt-field textarea {
+.momo-popup-container .prompt-field input, 
+.momo-popup-container .prompt-field textarea {
     width: 100%;
     padding: 8px;
-    background-color: var(--section-bg-color);
-    color: white;
+    background-color: var(--section-bg-color) !important;
+    color: var(--text-color) !important;
     border: 1px solid var(--border-color);
     border-radius: 5px;
     box-sizing: border-box;
