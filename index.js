@@ -297,19 +297,23 @@ jQuery(async () => {
                     </div>
                 `);
 
-                item.find(".load-btn").on("click", async (e) => {
+                // 为按钮绑定点击和触摸结束事件，以兼容移动端
+                item.find(".load-btn").on("click touchend", async (e) => {
                     e.stopPropagation();
+                    e.preventDefault(); // 防止触摸事件触发两次
                     await PresetManagerAPI.selectPreset(name);
                     await renderPresetList(); // 重新渲染以更新高亮
                 });
 
-                item.find(".edit-btn").on("click", async (e) => {
+                item.find(".edit-btn").on("click touchend", async (e) => {
                     e.stopPropagation();
+                    e.preventDefault();
                     await showEditView(name);
                 });
 
-                item.find(".delete-btn").on("click", async (e) => {
+                item.find(".delete-btn").on("click touchend", async (e) => {
                     e.stopPropagation();
+                    e.preventDefault();
                     if (confirm(`确定要删除预设 "${name}" 吗？`)) {
                         try {
                             await PresetManagerAPI.deletePreset(name);
@@ -1236,62 +1240,82 @@ jQuery(async () => {
     // -----------------------------------------------------------------
     /**
      * 使按钮可拖动，并处理点击与拖动的区分。
+     * 使按钮可拖动，并处理点击与拖动的区分（兼容桌面和移动端）。
      * @param {jQuery} $button - 按钮的jQuery对象。
      */
     function makeButtonDraggable($button) {
         let isDragging = false;
         let wasDragged = false;
-        let dragStartX, dragStartY;
+        let dragStartX, dragStartY, startX, startY;
 
-        $button.on("mousedown", function (e) {
-            // 只响应鼠标左键
-            if (e.which !== 1) return;
-
+        // 统一的事件处理函数
+        const onDragStart = (e) => {
             isDragging = true;
             wasDragged = false;
-            dragStartX = e.pageX - $button.offset().left;
-            dragStartY = e.pageY - $button.offset().top;
+            
+            // 兼容触摸和鼠标事件
+            const pageX = e.pageX || e.originalEvent.touches[0].pageX;
+            const pageY = e.pageY || e.originalEvent.touches[0].pageY;
 
-            // 添加拖动时的样式
+            startX = pageX;
+            startY = pageY;
+            dragStartX = pageX - $button.offset().left;
+            dragStartY = pageY - $button.offset().top;
+
             $button.css("cursor", "grabbing");
             e.preventDefault();
-        });
+        };
 
-        $(document).on("mousemove", function (e) {
+        const onDragMove = (e) => {
             if (isDragging) {
-                wasDragged = true; // 标记为已拖动
+                const pageX = e.pageX || e.originalEvent.touches[0].pageX;
+                const pageY = e.pageY || e.originalEvent.touches[0].pageY;
+
+                // 仅当移动超过一个小阈值时才标记为拖动
+                if (Math.abs(pageX - startX) > 5 || Math.abs(pageY - startY) > 5) {
+                    wasDragged = true;
+                }
+
                 $button.css({
-                    top: e.pageY - dragStartY,
-                    left: e.pageX - dragStartX,
+                    top: pageY - dragStartY,
+                    left: pageX - dragStartX,
                 });
             }
-        });
+        };
 
-        $(document).on("mouseup", function () {
+        const onDragEnd = () => {
             if (isDragging) {
                 isDragging = false;
                 $button.css("cursor", "pointer");
 
-                // 保存新位置
-                localStorage.setItem(
-                    STORAGE_KEY_BUTTON_POS,
-                    JSON.stringify({
-                        x: $button.css("left"),
-                        y: $button.css("top"),
-                    })
-                );
+                // 如果是拖动，则保存位置
+                if (wasDragged) {
+                    localStorage.setItem(
+                        STORAGE_KEY_BUTTON_POS,
+                        JSON.stringify({
+                            x: $button.css("left"),
+                            y: $button.css("top"),
+                        })
+                    );
+                }
             }
-        });
+        };
 
-        // click事件会在mouseup之后触发
-        $button.on("click", function () {
-            // 如果刚刚是拖拽结束，则不触发点击事件
+        const onClick = (e) => {
+            // 如果是拖动结束，则阻止点击/触摸事件
             if (wasDragged) {
+                e.preventDefault();
                 wasDragged = false; // 重置标志
                 return;
             }
             showPopup();
-        });
+        };
+
+        // 绑定事件
+        $button.on("mousedown touchstart", onDragStart);
+        $(document).on("mousemove touchmove", onDragMove);
+        $(document).on("mouseup touchend", onDragEnd);
+        $button.on("click touchend", onClick);
     }
 
     /**
@@ -1361,35 +1385,38 @@ jQuery(async () => {
         aiCreateView = $("#momo-ai-create-view"); // 获取新视图的引用
         presetListContainer = $("#momo-preset-list-container");
 
-        // 4. 绑定事件
-        $(`#${CLOSE_BUTTON_ID}`).on("click", closePopup);
-        overlay.on("click", function (event) {
-            if (event.target === this) closePopup();
+        // 4. 绑定事件 (同时绑定 click 和 touchend 以兼容移动端)
+        $(`#${CLOSE_BUTTON_ID}`).on("click touchend", (e) => { e.preventDefault(); closePopup(); });
+        overlay.on("click touchend", function (event) {
+            if (event.target === this) {
+                event.preventDefault();
+                closePopup();
+            }
         });
-        $(`#${POPUP_ID}`).on("click", (e) => e.stopPropagation());
+        $(`#${POPUP_ID}`).on("click touchend", (e) => e.stopPropagation());
 
         // -- 视图切换按钮
-        $("#momo-goto-delete-btn").on("click", showDeleteView);
-        $("#momo-goto-transfer-btn").on("click", showTransferView);
-        $("#momo-goto-ai-create-btn").on("click", showAiCreateView); // 绑定新按钮
+        $("#momo-goto-delete-btn").on("click touchend", (e) => { e.preventDefault(); showDeleteView(); });
+        $("#momo-goto-transfer-btn").on("click touchend", (e) => { e.preventDefault(); showTransferView(); });
+        $("#momo-goto-ai-create-btn").on("click touchend", (e) => { e.preventDefault(); showAiCreateView(); }); // 绑定新按钮
 
         // -- 返回主视图按钮 (使用事件委托)
         $(".momo-popup-body").on(
-            "click",
+            "click touchend",
             ".momo-back-to-main-btn",
-            showMainView
+            (e) => { e.preventDefault(); showMainView(); }
         );
 
-        // -- AI 创建视图的事件 (之前是主视图事件)
-        $("#momo-ai-create-btn").on("click", handleAiCreateEntry);
+        // -- AI 创建视图的事件
+        $("#momo-ai-create-btn").on("click touchend", (e) => { e.preventDefault(); handleAiCreateEntry(); });
 
         // -- 编辑视图的事件
         $("#momo-entry-select").on("change", renderEntryEditor);
-        $("#momo-save-entry-changes-btn").on("click", handleSaveEntryChanges);
-        $("#momo-submit-entry-ai-btn").on("click", handleEntryAiAssist);
-        $("#momo-save-ai-result-btn").on("click", handleSaveAiResult);
-        $("#momo-clear-ai-result-btn").on("click", handleClearAiResult);
-        $("#momo-save-manual-changes-btn").on("click", handleSaveManualChanges);
+        $("#momo-save-entry-changes-btn").on("click touchend", (e) => { e.preventDefault(); handleSaveEntryChanges(); });
+        $("#momo-submit-entry-ai-btn").on("click touchend", (e) => { e.preventDefault(); handleEntryAiAssist(); });
+        $("#momo-save-ai-result-btn").on("click touchend", (e) => { e.preventDefault(); handleSaveAiResult(); });
+        $("#momo-clear-ai-result-btn").on("click touchend", (e) => { e.preventDefault(); handleClearAiResult(); });
+        $("#momo-save-manual-changes-btn").on("click touchend", (e) => { e.preventDefault(); handleSaveManualChanges(); });
 
         // -- 删除视图的事件
         deleteView
@@ -1397,10 +1424,10 @@ jQuery(async () => {
             .on("change", renderEntriesForDeletion);
         deleteView
             .find("#momo-delete-selected-presets-btn")
-            .on("click", handleDeletePresets);
+            .on("click touchend", (e) => { e.preventDefault(); handleDeletePresets(); });
         deleteView
             .find("#momo-delete-selected-entries-btn")
-            .on("click", handleDeleteEntries);
+            .on("click touchend", (e) => { e.preventDefault(); handleDeleteEntries(); });
 
         // -- 复制视图的事件
         transferView
@@ -1411,7 +1438,7 @@ jQuery(async () => {
             console.log(
                 `[${extensionName}] Transfer button found. Binding click event.`
             );
-            transferBtn.on("click", handleTransferEntries);
+            transferBtn.on("click touchend", (e) => { e.preventDefault(); handleTransferEntries(); });
         } else {
             console.error(
                 `[${extensionName}] CRITICAL: Transfer button with ID #momo-transfer-entries-btn not found!`
