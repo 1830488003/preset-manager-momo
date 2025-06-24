@@ -1379,7 +1379,7 @@ jQuery(async () => {
      * 从 GitHub 和 Gitee 检查更新，并提供更详细的错误反馈。
      */
     async function checkForUpdates() {
-        const localVersion = "2.1.2";
+        const localVersion = "2.1.5";
         const githubRepo = "1830488003/preset-manager-momo";
         const giteeRepo = "qq410847381/preset-manager-momo";
         const githubApiUrl = `https://api.github.com/repos/${githubRepo}/releases/latest`;

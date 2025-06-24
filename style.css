@@ -229,16 +229,30 @@
     gap: 10px;
 }
 
-.momo-popup-container .momo-input, 
-.momo-popup-container .momo-select, 
-.momo-popup-container .momo-textarea {
-    width: 100%;
+/* --- 自包含的、高优先级的输入框样式，以覆盖主题冲突 --- */
+#preset-manager-momo-popup input[type="text"],
+#preset-manager-momo-popup input[type="number"],
+#preset-manager-momo-popup select,
+#preset-manager-momo-popup textarea {
+    background-color: #23272a !important; /* 硬编码的深色背景 */
+    color: #FFFFFF !important; /* 硬编码的浅色文字 */
+    border: 1px solid #40444b !important; /* 硬编码的边框颜色 */
     padding: 10px;
-    background-color: var(--main-bg-color) !important;
-    color: var(--text-color) !important;
-    border: 1px solid var(--border-color);
     border-radius: 5px;
     box-sizing: border-box;
+    width: 100%;
+    font-family: var(--font-family);
+}
+
+/* 确保 select 元素的下拉箭头在深色背景下可见 */
+#preset-manager-momo-popup select {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right .7em top 50%;
+    background-size: .65em auto;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 .momo-textarea {
@@ -286,6 +300,7 @@
     border: 1px solid var(--border-color);
     flex-grow: 1; /* 让它占据可用的垂直空间 */
     min-height: 0; /* 关键修复：允许容器在flex布局中收缩，从而使overflow-y生效 */
+    max-height: 450px; /* 新增：限制列表在桌面端的高度，防止其无限拉伸 */
 }
 
 .momo-preset-item {
@@ -409,16 +424,6 @@
     margin-bottom: 5px;
     font-size: 0.9em;
     color: var(--text-muted-color);
-}
-.momo-popup-container .prompt-field input, 
-.momo-popup-container .prompt-field textarea {
-    width: 100%;
-    padding: 8px;
-    background-color: var(--section-bg-color) !important;
-    color: var(--text-color) !important;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    box-sizing: border-box;
 }
 
 /* 复选框项目样式 */
