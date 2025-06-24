@@ -1,0 +1,364 @@
+{
+    "chat_completion_source": "custom",
+    "openai_model": "gpt-4-turbo",
+    "claude_model": "claude-3-5-sonnet-20240620",
+    "windowai_model": "",
+    "openrouter_model": "OR_Website",
+    "openrouter_use_fallback": false,
+    "openrouter_group_models": false,
+    "openrouter_sort_models": "alphabetically",
+    "openrouter_providers": [],
+    "openrouter_allow_fallbacks": true,
+    "openrouter_middleout": "on",
+    "ai21_model": "jamba-1.5-large",
+    "mistralai_model": "mistral-large-latest",
+    "cohere_model": "command-r",
+    "perplexity_model": "llama-3-70b-instruct",
+    "groq_model": "llama3-70b-8192",
+    "zerooneai_model": "yi-large",
+    "blockentropy_model": "be-70b-base-llama3.1",
+    "custom_model": "gemini-2.5-pro-preview-03-25",
+    "custom_prompt_post_processing": "",
+    "google_model": "gemini-pro",
+    "temperature": 0.95,
+    "frequency_penalty": 1.07,
+    "presence_penalty": 0.31,
+    "top_p": 0.95,
+    "top_k": 0,
+    "top_a": 0,
+    "min_p": 0,
+    "repetition_penalty": 1,
+    "openai_max_context": 2000000,
+    "openai_max_tokens": 8000,
+    "wrap_in_quotes": false,
+    "names_behavior": 0,
+    "send_if_empty": "",
+    "impersonation_prompt": "[Write your next reply from the point of view of {{user}}, using the chat history so far as a guideline for the writing style of {{user}}. Don't write as {{char}} or system. Don't describe actions of {{char}}.]",
+    "new_chat_prompt": "[Start a new Chat]",
+    "new_group_chat_prompt": "[Start a new group chat. Group members: {{group}}]",
+    "new_example_chat_prompt": "[Example Chat]",
+    "continue_nudge_prompt": "[Continue the following message. Do not include ANY parts of the original message. Use capitalization and punctuation as if your reply is a part of the original message: {{lastChatMessage}}]",
+    "bias_preset_selected": "Default (none)",
+    "max_context_unlocked": true,
+    "wi_format": "{0}",
+    "scenario_format": "{{scenario}}",
+    "personality_format": "{{personality}}",
+    "group_nudge_prompt": "[Write the next reply only as {{char}}.]",
+    "stream_openai": true,
+    "prompts": [
+        {
+            "identifier": "4d8250c1-21b9-4695-a84a-11844c3b6c0a",
+            "system_prompt": false,
+            "enabled": false,
+            "marker": false,
+            "name": "📜📜反八股开关(可选)",
+            "role": "system",
+            "content": "{{setvar::write::\nDreamer  is not allowed to concretise 情绪，氛围与心理影响描述 :,\nDreamer is allowed to use unusual and incorrect emotions and sensory descriptions in the 梦境正文:,,\nDreamer is allowed to use unusual and incorrect interaction and action descriptions in the 梦境正文:,,\nDreamer 避免包含对人物的心理、神情与意图进行主观臆测及暗示性解读的描述 in the 梦境正文:,,\nDreamer 禁止包含对神态、表情、言语与语气进行过分解读或赋予过多潜在含义的描述 in the 梦境正文:,,\n}}",
+            "injection_position": 0,
+            "injection_depth": 4,
+            "forbid_overrides": false,
+            "injection_order": 100
+        },
+        {
+            "identifier": "7a29c1f5-4f53-40cf-b3e5-35aa01122935",
+            "system_prompt": false,
+            "enabled": false,
+            "marker": false,
+            "name": "🤔日文对话开(选开)",
+            "role": "user",
+            "content": "- 梦境正文只能包含\"中文翻译后的日文句子\"，禁止显示原日文句",
+            "injection_position": 0,
+            "injection_depth": 4,
+            "forbid_overrides": false
+        }
+    ],
+    "prompt_order": [
+        {
+            "character_id": 100000,
+            "order": [
+                {
+                    "identifier": "main",
+                    "enabled": true
+                },
+                {
+                    "identifier": "worldInfoBefore",
+                    "enabled": true
+                },
+                {
+                    "identifier": "charDescription",
+                    "enabled": true
+                },
+                {
+                    "identifier": "charPersonality",
+                    "enabled": true
+                },
+                {
+                    "identifier": "scenario",
+                    "enabled": true
+                },
+                {
+                    "identifier": "enhanceDefinitions",
+                    "enabled": false
+                },
+                {
+                    "identifier": "nsfw",
+                    "enabled": true
+                },
+                {
+                    "identifier": "worldInfoAfter",
+                    "enabled": true
+                },
+                {
+                    "identifier": "dialogueExamples",
+                    "enabled": true
+                },
+                {
+                    "identifier": "chatHistory",
+                    "enabled": true
+                },
+                {
+                    "identifier": "jailbreak",
+                    "enabled": true
+                },
+                {
+                    "identifier": "a6d6a373-4ee0-478c-a78f-204f22ee4ca7",
+                    "enabled": true
+                },
+                {
+                    "identifier": "1be7ab8c-c00d-47c4-883c-9c108d7d4c70",
+                    "enabled": true
+                },
+                {
+                    "identifier": "ce1950d5-54a4-4dc5-af32-7f4fbecb97e9",
+                    "enabled": true
+                },
+                {
+                    "identifier": "9d4c4b83-8aab-4c04-a6cd-f37d156982f5",
+                    "enabled": true
+                },
+                {
+                    "identifier": "18fa1b2c-70ec-41f3-bdcd-f40a7dc6bab8",
+                    "enabled": true
+                },
+                {
+                    "identifier": "6f01d0ac-5f82-4bb0-8748-3e10ed80cd69",
+                    "enabled": true
+                },
+                {
+                    "identifier": "01a619c3-b95c-40df-bdde-67bc4e033b52",
+                    "enabled": true
+                },
+                {
+                    "identifier": "1f248fe9-e659-46ed-8bb1-39a9707d94b3",
+                    "enabled": true
+                },
+                {
+                    "identifier": "fc9ca00a-f765-4be7-b22f-da5536e2fa04",
+                    "enabled": true
+                },
+                {
+                    "identifier": "0ba3ad39-2af3-4c38-9668-f502daed2197",
+                    "enabled": true
+                },
+                {
+                    "identifier": "83c5da19-3584-422b-8bc8-6213011ab10f",
+                    "enabled": true
+                },
+                {
+                    "identifier": "42aa2161-78d2-44b8-b807-895cc7bb3f7c",
+                    "enabled": true
+                },
+                {
+                    "identifier": "710ae515-7cfe-4cdf-9d5b-4db57c5bf82c",
+                    "enabled": true
+                },
+                {
+                    "identifier": "a96c52e7-0b85-4323-af18-eb766b5ee5d3",
+                    "enabled": true
+                },
+                {
+                    "identifier": "acc1e061-059e-4d24-85b1-8c43b1e4d89a",
+                    "enabled": true
+                },
+                {
+                    "identifier": "26f3c45d-2702-4f8a-a344-15fa00ccea21",
+                    "enabled": true
+                },
+                {
+                    "identifier": "7e42635a-8f91-4010-9a3e-1cb22c72e5dc",
+                    "enabled": true
+                },
+                {
+                    "identifier": "66814c6a-f5b3-406f-9e09-9104338f29e0",
+                    "enabled": true
+                },
+                {
+                    "identifier": "eb92b407-3b8e-4e9a-9e89-83ca82acf618",
+                    "enabled": true
+                },
+                {
+                    "identifier": "4d8250c1-21b9-4695-a84a-11844c3b6c0a",
+                    "enabled": true
+                },
+                {
+                    "identifier": "7a29c1f5-4f53-40cf-b3e5-35aa01122935",
+                    "enabled": true
+                }
+            ]
+        },
+        {
+            "character_id": 100001,
+            "order": [
+                {
+                    "identifier": "ae3a799f-249f-4765-8936-243593347dec",
+                    "enabled": false
+                },
+                {
+                    "identifier": "d087c4ef-5e4c-41a7-929d-9665eebcbc5c",
+                    "enabled": true
+                },
+                {
+                    "identifier": "ab5d13ad-91cf-4d1a-8e06-7fe0121b1c24",
+                    "enabled": true
+                },
+                {
+                    "identifier": "main",
+                    "enabled": true
+                },
+                {
+                    "identifier": "b6fab40d-49aa-45a1-b2d2-f9e7df4a9926",
+                    "enabled": false
+                },
+                {
+                    "identifier": "63a8ada3-6fc7-4b71-a729-f21da6519350",
+                    "enabled": false
+                },
+                {
+                    "identifier": "c4c85150-d3a2-4541-962b-1a59641c8dc5",
+                    "enabled": true
+                },
+                {
+                    "identifier": "0d713ede-bb53-42db-a285-eccafc28131e",
+                    "enabled": true
+                },
+                {
+                    "identifier": "8270729b-80a5-494e-a1d1-ada317ced5b7",
+                    "enabled": true
+                },
+                {
+                    "identifier": "581dd7b9-b8c6-4236-9412-e8db0c6370fb",
+                    "enabled": false
+                },
+                {
+                    "identifier": "fa2314e7-46c0-460b-ab8d-52f843b8088e",
+                    "enabled": true
+                },
+                {
+                    "identifier": "eb6f7459-4ee3-4064-b804-adc0258e7d27",
+                    "enabled": false
+                },
+                {
+                    "identifier": "358aefca-add9-440e-8bfe-db605280f06a",
+                    "enabled": false
+                },
+                {
+                    "identifier": "worldInfoBefore",
+                    "enabled": true
+                },
+                {
+                    "identifier": "worldInfoAfter",
+                    "enabled": true
+                },
+                {
+                    "identifier": "personaDescription",
+                    "enabled": true
+                },
+                {
+                    "identifier": "charDescription",
+                    "enabled": true
+                },
+                {
+                    "identifier": "charPersonality",
+                    "enabled": true
+                },
+                {
+                    "identifier": "scenario",
+                    "enabled": true
+                },
+                {
+                    "identifier": "enhanceDefinitions",
+                    "enabled": true
+                },
+                {
+                    "identifier": "nsfw",
+                    "enabled": true
+                },
+                {
+                    "identifier": "chatHistory",
+                    "enabled": true
+                },
+                {
+                    "identifier": "87c676c4-326b-4edb-a9d7-129d8f3cdc7c",
+                    "enabled": false
+                },
+                {
+                    "identifier": "83c0599b-b97e-4606-931c-3c255efe8394",
+                    "enabled": true
+                },
+                {
+                    "identifier": "efe5be74-540d-487d-8a05-7377e486953d",
+                    "enabled": false
+                },
+                {
+                    "identifier": "b65f486a-6df8-4cfa-8c2d-fc5852b26dec",
+                    "enabled": true
+                },
+                {
+                    "identifier": "56af34e1-7ab5-4268-b22b-18821d952198",
+                    "enabled": false
+                },
+                {
+                    "identifier": "a6f67ea0-6d4d-4a3e-956e-534d37a52795",
+                    "enabled": false
+                },
+                {
+                    "identifier": "dialogueExamples",
+                    "enabled": true
+                },
+                {
+                    "identifier": "74ac9efc-133f-490e-8662-dfe8594c937f",
+                    "enabled": false
+                },
+                {
+                    "identifier": "6295a7d5-6e5a-4022-955e-e481792d4225",
+                    "enabled": false
+                },
+                {
+                    "identifier": "jailbreak",
+                    "enabled": true
+                }
+            ]
+        }
+    ],
+    "api_url_scale": "",
+    "show_external_models": false,
+    "assistant_prefill": "",
+    "assistant_impersonation": "",
+    "claude_use_sysprompt": false,
+    "use_makersuite_sysprompt": true,
+    "use_alt_scale": false,
+    "squash_system_messages": false,
+    "image_inlining": false,
+    "inline_image_quality": "low",
+    "bypass_status_check": false,
+    "continue_prefill": false,
+    "continue_postfix": " ",
+    "function_calling": false,
+    "show_thoughts": true,
+    "reasoning_effort": "low",
+    "enable_web_search": false,
+    "request_images": false,
+    "seed": -1,
+    "n": 1,
+    "name": "贝露的破甲3.0正式版"
+}

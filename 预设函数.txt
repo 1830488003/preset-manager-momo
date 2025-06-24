@@ -1,0 +1,44 @@
+## 原生PresetManager API解析 (基于 `preset-manager.js`)
+为了避免未来的开发错误，特此记录SillyTavern原生`PresetManager`的核心API用法。
+
+- **`getPresetManager(apiId = '')`**:
+    - **功能:** 获取指定API的预设管理器实例。如果不提供`apiId`，则获取当前主API的管理器。
+    - **用法:** `const stApi = await context.getPresetManager();`
+
+- **`getAllPresets()`**:
+    - **功能:** 获取所有预设的**名称**列表。
+    - **返回:** `string[]` (例如: `["My Preset 1", "My Preset 2"]`)
+    - **用法:** `const presetNames = stApi.getAllPresets();`
+
+- **`getCompletionPresetByName(name)`**:
+    - **功能:** 根据预设**名称**获取完整的预设**数据对象**。这是获取预设内容最可靠的方法。
+    - **返回:** `object` (预设的JSON内容) 或 `undefined`。
+    - **用法:** `const presetData = stApi.getCompletionPresetByName("My Preset 1");`
+
+- **`getSelectedPresetName()`**:
+    - **功能:** 获取当前在SillyTavern主界面中被选中的预设的**名称**。
+    - **返回:** `string` (例如: `"My Preset 1"`)
+    - **核心用途:** **判断哪个预设是当前激活的预设**，用于UI高亮等功能。
+
+- **`findPreset(name)`**:
+    - **功能:** 根据预设**名称**查找预设，并返回其在下拉菜单中的内部**值(value)**。
+    - **返回:** `any` (通常是数字索引或字符串值，用于`selectPreset`)
+    - **注意:** 这个方法不返回预设的数据对象。
+
+- **`selectPreset(value)`**:
+    - **功能:** 根据`findPreset(name)`返回的**值(value)**来应用一个预设。这是触发预设加载的正确方法。
+    - **用法:**
+        ```javascript
+        const presetValue = stApi.findPreset("My Preset 1");
+        if (presetValue !== undefined) {
+            stApi.selectPreset(presetValue);
+        }
+        ```
+
+- **`savePreset(name, settings)`**:
+    - **功能:** 保存一个预设。如果名为`name`的预设已存在，则覆盖它；如果不存在，则创建新的。
+    - **用法:** `await stApi.savePreset("My New Preset", { temp: 0.8, ... });`
+
+- **`deletePreset(name)`**:
+    - **功能:** 根据名称删除一个预设。
+    - **用法:** `await stApi.deletePreset("My Old Preset");`

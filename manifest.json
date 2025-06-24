@@ -1,11 +1,11 @@
 {
-  "display_name": "预设管理器（默默作品）",
-  "loading_order": 1001,
+  "display_name": "预设管理器 (Preset Manager Momo)",
+  "loading_order": 1002,
   "requires": [],
   "optional": [],
   "js": "index.js",
   "css": "style.css",
   "author": "默默",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "homePage": "https://github.com/1830488003/preset-manager-momo"
 }

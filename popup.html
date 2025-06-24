@@ -1,157 +1,141 @@
 <!-- 弹窗的UI -->
-<div id="momo-world-book-popup-overlay" class="momo-world-book-popup-overlay" style="display: none;">
-<div id="momo-world-book-popup" class="momo-popup-container">
-    <button id="momo-world-book-popup-close-button" class="momo-popup-close-button">&times;</button>
-    <div class="momo-popup-body">
-        <!-- 主页面 -->
-        <div id="momo-main-view">
-            <!-- 载入全局世界书 -->
-            <div class="momo-section">
-                <h3><i class="fa-solid fa-globe"></i> 载入全局世界书</h3>
-                <div class="momo-actions">
-                    <button id="momo-select-book-btn" class="momo-button">选择世界书 (全局)</button>
-                    <button id="momo-load-preset-btn" class="momo-button">载入方案</button>
-                    <button id="momo-goto-delete-btn" class="momo-button">🗑️ 删除世界书和条目</button>
-                    <button id="momo-goto-modify-btn" class="momo-button">📝 修改条目</button>
-                    <button id="momo-goto-transfer-btn" class="momo-button">🔄 条目迁移</button>
+<div id="preset-manager-momo-popup-overlay" class="preset-manager-momo-popup-overlay" style="display: none;">
+    <div id="preset-manager-momo-popup" class="momo-popup-container">
+        <button id="preset-manager-momo-popup-close-button" class="momo-popup-close-button">&times;</button>
+        <div class="momo-popup-body">
+            <!-- 主视图 -->
+            <div id="momo-main-view">
+                <div class="momo-section">
+                    <h3><i class="fa-solid fa-list-check"></i> 预设列表</h3>
+                    <div id="momo-preset-list-container" class="momo-preset-list-container"></div>
                 </div>
-                <div id="momo-preset-list-container" class="momo-preset-list-container" style="display: none;"></div>
+
+                <div class="momo-section">
+                    <div class="momo-actions">
+                        <button id="momo-goto-ai-create-btn" class="momo-button">✨ AI创建条目</button>
+                        <button id="momo-goto-delete-btn" class="momo-button">🗑️ 批量删除</button>
+                        <button id="momo-goto-transfer-btn" class="momo-button">🔄 条目复制</button>
+                    </div>
+                </div>
             </div>
 
-            <!-- 编辑世界书 -->
-            <div class="momo-section">
-                <h3><i class="fa-solid fa-pen-to-square"></i> 编辑世界书</h3>
-                <div class="momo-edit-controls">
-                    <label for="momo-edit-worldbook-select">选择要编辑的世界书:</label>
-                    <select id="momo-edit-worldbook-select" class="momo-select">
-                        <option value="">-- 请先选择一个世界书 --</option>
-                    </select>
-                </div>
-                <div id="momo-edit-actions-container" class="momo-actions momo-disabled">
-                    <button id="momo-goto-generator-btn" class="momo-button" disabled>🌍 世界生成器</button>
-                    <button id="momo-goto-designer-btn" class="momo-button" disabled>📖 故事设计师</button>
-                </div>
-            </div>
-        </div>
+            <!-- 高级编辑视图 -->
+            <div id="momo-edit-view" class="momo-section" style="display: none;">
+                <h3><i class="fa-solid fa-pen-to-square"></i> 高级编辑</h3>
 
-        <!-- 世界书选择子页面 -->
-        <div id="momo-select-view" class="momo-section" style="display: none;">
-            <h3><i class="fa-solid fa-check-to-slot"></i> 选择要启用的世界书</h3>
-            <div id="momo-book-list" class="momo-book-list-container"></div>
-            <div class="momo-actions">
-                <button id="momo-save-preset-btn" class="momo-button">保存方案</button>
-                <button class="momo-button momo-back-to-main-btn">返回</button>
-            </div>
-        </div>
+                <!-- 条目编辑器 -->
+                <div id="momo-entry-editor-section">
+                    <h4><i class="fa-solid fa-puzzle-piece"></i> 条目编辑</h4>
+                    <div class="momo-edit-controls">
+                        <label for="momo-entry-select">选择条目:</label>
+                        <select id="momo-entry-select" class="momo-select"></select>
+                        <div id="momo-entry-editor-form" style="display: none;">
+                             <!-- 条目编辑表单将动态生成在这里 -->
+                             <label for="momo-entry-name-input">名称:</label>
+                             <input type="text" id="momo-entry-name-input" class="momo-input">
+                             <label for="momo-entry-content-textarea">内容:</label>
+                             <textarea id="momo-entry-content-textarea" class="momo-textarea" rows="8"></textarea>
+                             <!-- 其他条目字段可以在这里添加 -->
+                             <div class="momo-actions">
+                                 <button id="momo-save-entry-changes-btn" class="momo-button">保存条目修改</button>
+                             </div>
+                             <label for="momo-entry-ai-prompt" class="momo-textarea-label">AI 辅助修改 (条目内容):</label>
+                             <textarea id="momo-entry-ai-prompt" class="momo-textarea" rows="3" placeholder="例如：将内容改写得更具描述性"></textarea>
+                             <div class="momo-actions">
+                                 <button id="momo-submit-entry-ai-btn" class="momo-button">提交给AI</button>
+                             </div>
+                             <!-- AI结果展示和编辑区域 -->
+                             <div id="momo-ai-result-container" style="display: none;">
+                                 <label for="momo-ai-result-textarea" class="momo-textarea-label">AI 生成内容 (可编辑):</label>
+                                 <textarea id="momo-ai-result-textarea" class="momo-textarea" rows="8"></textarea>
+                                 <div class="momo-actions">
+                                     <button id="momo-save-ai-result-btn" class="momo-button">保存AI内容</button>
+                                     <button id="momo-clear-ai-result-btn" class="momo-button abandon">清空</button>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 高级参数设置 (可折叠) -->
+                <details id="momo-advanced-params-section">
+                    <summary><h4><i class="fa-solid fa-sliders"></i> 高级参数设置</h4></summary>
+                    <div class="momo-edit-controls">
+                        <div id="momo-prompt-editor-container">
+                            <!-- Prompt字段将动态生成在这里 -->
+                        </div>
+                        <div class="momo-actions">
+                            <button id="momo-save-manual-changes-btn" class="momo-button">保存参数修改</button>
+                        </div>
+                    </div>
+                </details>
 
-        <!-- 修改世界书子页面 -->
-        <div id="momo-modify-view" class="momo-section" style="display: none;">
-            <h3>📝 修改世界书条目</h3>
-            <div class="momo-modify-controls">
-                <div class="momo-grid-container">
-                    <label for="momo-worldbook-select">选择世界书:</label>
-                    <select id="momo-worldbook-select" class="momo-select"></select>
-                    <label for="momo-entry-select">选择条目:</label>
-                    <select id="momo-entry-select" class="momo-select"></select>
-                </div>
-                <label for="momo-selected-entry-content" class="momo-textarea-label">当前条目内容 (可编辑):</label>
-                <textarea id="momo-selected-entry-content" class="momo-textarea" rows="6" placeholder="选择一个条目后，其内容将显示在这里..."></textarea>
-                <div class="momo-actions">
-                    <button id="momo-save-manual-changes-btn" class="momo-button">保存手动修改</button>
-                </div>
-                <label for="momo-user-prompt" class="momo-textarea-label">你的修改要求 (AI处理):</label>
-                <textarea id="momo-user-prompt" class="momo-textarea" rows="3" placeholder="例如：将这个条目的内容改成..."></textarea>
-                <label for="momo-ai-response" class="momo-textarea-label">AI 的回复:</label>
-                <textarea id="momo-ai-response" class="momo-textarea" rows="5" readonly placeholder="AI处理后的内容将显示在这里..."></textarea>
-            </div>
-            <div class="momo-actions">
-                <button id="momo-submit-modification-btn" class="momo-button">提交给AI</button>
-                <button class="momo-button momo-back-to-main-btn">返回</button>
-            </div>
-        </div>
-
-        <!-- 世界生成器子页面 -->
-        <div id="momo-generator-view" class="momo-section" style="display: none;">
-            <h3>🌍 世界生成器</h3>
-            <p class="momo-description">根据你选择的世界书和你的要求，AI将为你创造新的条目。</p>
-            <div class="momo-modify-controls">
-                <label for="momo-generator-prompt" class="momo-textarea-label">你的生成要求:</label>
-                <textarea id="momo-generator-prompt" class="momo-textarea" rows="4" placeholder="专业示例：增加一个“飞机体系”。定义角色可以坐飞机去全国各地，并详细说明该体系的触发规则（如：何时可以坐飞机、旅行对角色的影响等）。"></textarea>
-                <label for="momo-generator-response" class="momo-textarea-label">AI 的回复:</label>
-                <textarea id="momo-generator-response" class="momo-textarea" rows="8" readonly placeholder="AI处理后的内容将显示在这里..."></textarea>
-            </div>
-            <div class="momo-actions">
-                <button id="momo-submit-generator-btn" class="momo-button">生成世界</button>
-                <button id="momo-upload-generator-btn" class="momo-button" disabled>上传到世界书</button>
-                <button class="momo-button momo-back-to-main-btn">返回</button>
-            </div>
-        </div>
-
-        <!-- 故事设计师子页面 -->
-        <div id="momo-designer-view" class="momo-section" style="display: none;">
-            <h3>📖 故事设计师</h3>
-            <p class="momo-description">输入一个故事概念，AI 将为你设计一套包含主线目标和多个分支节点的互动故事条目。</p>
-            <div class="momo-modify-controls">
-                <label for="momo-designer-prompt" class="momo-textarea-label">你的故事概念:</label>
-                <textarea id="momo-designer-prompt" class="momo-textarea" rows="4" placeholder="例如：调查村庄里神秘失踪的猫。"></textarea>
-                <label for="momo-designer-response" class="momo-textarea-label">AI 设计的故事条目:</label>
-                <textarea id="momo-designer-response" class="momo-textarea" rows="8" readonly placeholder="AI设计的故事条目将显示在这里..."></textarea>
-            </div>
-            <div class="momo-actions">
-                <button id="momo-submit-designer-btn" class="momo-button">设计故事</button>
-                <button id="momo-upload-designer-btn" class="momo-button" disabled>上传到世界书</button>
-                <button class="momo-button momo-back-to-main-btn">返回</button>
-            </div>
-        </div>
-
-        <!-- 删除视图 -->
-        <div id="momo-delete-view" style="display: none;">
-            <div class="momo-section">
-                <h3><i class="fa-solid fa-trash-can"></i> 删除世界书</h3>
-                <p class="momo-description">点击下方的世界书进行选择 (可多选)，再次点击取消选择。选择后，其条目会显示在下方。</p>
-                <div id="worldbook-list-container" class="momo-book-list-container"></div>
-                <div class="momo-actions">
-                    <button id="delete-worldbook-btn" class="momo-button abandon">删除选中的世界书</button>
-                </div>
-            </div>
-            <div class="momo-section">
-                <h3><i class="fa-solid fa-file-circle-minus"></i> 删除条目</h3>
-                <p class="momo-description">下方会展示已选择的世界书中的所有条目。点击条目进行选择。</p>
-                <h5>📘 蓝灯条目 (Constant Entry)</h5>
-                <div id="constant-entries-container" class="momo-book-list-container" style="margin-bottom: 15px;">
-                    <p class="momo-no-tasks">请先在上方选择一个或多个世界书。</p>
-                </div>
-                <h5>📗 绿灯条目 (Normal Entry)</h5>
-                <div id="normal-entries-container" class="momo-book-list-container"></div>
-                <div class="momo-actions">
-                     <button id="delete-entry-btn" class="momo-button abandon">删除选中的条目</button>
-                </div>
-            </div>
-            <div class="momo-actions">
-                <button class="momo-button momo-back-to-main-btn">返回</button>
-            </div>
-        </div>
-
-        <!-- 条目迁移子页面 -->
-        <div id="momo-transfer-view" class="momo-section" style="display: none;">
-            <h3>🔄 条目迁移</h3>
-            <div class="momo-transfer-controls">
-                <div class="momo-grid-container">
-                    <label for="momo-source-worldbook-select">源世界书:</label>
-                    <select id="momo-source-worldbook-select" class="momo-select"></select>
-                    <label for="momo-target-worldbook-select">目标世界书:</label>
-                    <select id="momo-target-worldbook-select" class="momo-select"></select>
-                </div>
-                <label class="momo-textarea-label">选择要迁移的条目:</label>
-                <div id="momo-source-entries-container" class="momo-book-list-container" style="height: 200px; overflow-y: auto;">
-                    <p class="momo-no-tasks">请先选择一个源世界书。</p>
-                </div>
-                <div class="momo-actions">
-                    <button id="momo-transfer-entries-btn" class="momo-button">执行迁移</button>
+                 <div class="momo-actions">
                     <button class="momo-button momo-back-to-main-btn">返回</button>
                 </div>
             </div>
+
+            <!-- 批量删除视图 -->
+            <div id="momo-delete-view" class="momo-section" style="display: none;">
+                <h3><i class="fa-solid fa-trash-can"></i> 批量删除</h3>
+                <div class="momo-delete-controls">
+                    <label>选择要删除的预设:</label>
+                    <div id="momo-delete-preset-list" class="momo-book-list-container"></div>
+                    <div class="momo-actions">
+                        <button id="momo-delete-selected-presets-btn" class="momo-button abandon">删除选中的预设</button>
+                    </div>
+                    <label>选择要删除的条目 (从单个预设中):</label>
+                    <select id="momo-delete-entry-preset-select" class="momo-select"></select>
+                    <div id="momo-delete-entry-list" class="momo-book-list-container"></div>
+                     <div class="momo-actions">
+                        <button id="momo-delete-selected-entries-btn" class="momo-button abandon">删除选中的条目</button>
+                    </div>
+                </div>
+                 <div class="momo-actions">
+                    <button class="momo-button momo-back-to-main-btn">返回</button>
+                </div>
+            </div>
+
+            <!-- 条目复制视图 -->
+            <div id="momo-transfer-view" class="momo-section" style="display: none;">
+                <h3><i class="fa-solid fa-right-left"></i> 条目复制</h3>
+                <div class="momo-transfer-controls">
+                    <div class="momo-grid-container">
+                        <label for="momo-source-preset-select">源预设:</label>
+                        <select id="momo-source-preset-select" class="momo-select"></select>
+                        <label for="momo-target-preset-select">目标预设:</label>
+                        <select id="momo-target-preset-select" class="momo-select"></select>
+                    </div>
+                    <label class="momo-textarea-label">选择要复制的条目:</label>
+                    <div id="momo-source-entries-container" class="momo-book-list-container" style="height: 200px;"></div>
+                    <div class="momo-actions">
+                        <button id="momo-transfer-entries-btn" class="momo-button">执行复制</button>
+                    </div>
+                </div>
+                 <div class="momo-actions">
+                    <button class="momo-button momo-back-to-main-btn">返回</button>
+                </div>
+            </div>
+
+            <!-- AI 创建条目视图 -->
+            <div id="momo-ai-create-view" class="momo-section" style="display: none;">
+                <h3><i class="fa-solid fa-wand-magic-sparkles"></i> AI 创建新条目</h3>
+                <div class="momo-form-group">
+                    <label for="momo-ai-create-target-preset">添加到预设:</label>
+                    <select id="momo-ai-create-target-preset" class="momo-select"></select>
+                </div>
+                <div class="momo-form-group">
+                    <label for="momo-ai-create-prompt">创建要求:</label>
+                    <textarea id="momo-ai-create-prompt" class="momo-textarea" rows="3" placeholder="例如：生成一个让NPC更主动、更智能的条目"></textarea>
+                </div>
+                <div class="momo-actions">
+                    <button id="momo-ai-create-btn" class="momo-button">✨ AI 创建</button>
+                </div>
+                <div class="momo-actions">
+                   <button class="momo-button momo-back-to-main-btn">返回</button>
+               </div>
+           </div>
+
         </div>
     </div>
-</div>
 </div>
