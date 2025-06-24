@@ -1050,10 +1050,11 @@ jQuery(async () => {
                 enabled: true,
             };
 
-            // --- 开始同步更新 ---
+            // --- 开始同步更新 (修改为添加到开头) ---
             // 1. 更新 prompts 数组 (数据库)
             if (!targetPreset.prompts) targetPreset.prompts = [];
-            targetPreset.prompts.push(newPromptObject);
+            // 使用 unshift 将新条目添加到数组的开头
+            targetPreset.prompts.unshift(newPromptObject);
 
             // 2. 更新 prompt_order 数组 (显示列表)
             const newOrderItem = { identifier: newIdentifier, enabled: true };
@@ -1067,7 +1068,8 @@ jQuery(async () => {
             }
             targetPreset.prompt_order.forEach((orderList) => {
                 if (orderList.order) {
-                    orderList.order.push(newOrderItem);
+                    // 使用 unshift 将新条目添加到显示列表的开头
+                    orderList.order.unshift(newOrderItem);
                 }
             });
             // --- 同步更新结束 ---
@@ -1168,8 +1170,9 @@ jQuery(async () => {
                 selectedEntryIdentifiers.includes(prompt.identifier)
             );
 
-            // 【最终的、根据您指示重写的逻辑】
-            entriesToCopy.forEach((entryToCopy) => {
+            // 【修改为添加到开头】
+            // 为了在开头保持复制的顺序，我们反转数组，然后使用 unshift
+            entriesToCopy.reverse().forEach((entryToCopy) => {
                 // 1. 更新 prompts 数组 (数据库)
                 // 确保条目数据只添加一次
                 if (
@@ -1177,7 +1180,8 @@ jQuery(async () => {
                         (p) => p.identifier === entryToCopy.identifier
                     )
                 ) {
-                    newTargetPreset.prompts.push(
+                    // 使用 unshift 添加到开头
+                    newTargetPreset.prompts.unshift(
                         JSON.parse(JSON.stringify(entryToCopy))
                     );
                 }
@@ -1203,7 +1207,8 @@ jQuery(async () => {
                             (o) => o.identifier === newOrderItem.identifier
                         )
                     ) {
-                        orderList.order.push(newOrderItem);
+                        // 使用 unshift 添加到显示列表的开头
+                        orderList.order.unshift(newOrderItem);
                     }
                 });
             });
@@ -1380,7 +1385,7 @@ jQuery(async () => {
      * 这种方法更健壮，因为它不要求用户创建“发行版”。
      */
     async function checkForUpdates() {
-        const localVersion = "2.2.0";
+        const localVersion = "2.2.1";
         const githubRepo = "1830488003/preset-manager-momo";
         const giteeRepo = "qq410847381/preset-manager-momo";
         
