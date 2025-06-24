@@ -279,10 +279,11 @@
     margin-top: 10px;
     background-color: var(--section-bg-color);
     border-radius: 5px;
-    padding: 8px; /* 增加内边距 */
-    max-height: 40vh; /* 设置最大高度，使其可滚动 */
+    padding: 8px;
     overflow-y: auto; /* 启用垂直滚动 */
-    border: 1px solid var(--border-color); /* 添加边框以获得更好的视觉效果 */
+    border: 1px solid var(--border-color);
+    flex-grow: 1; /* 让它占据可用的垂直空间 */
+    min-height: 0; /* 关键修复：允许容器在flex布局中收缩，从而使overflow-y生效 */
 }
 
 .momo-preset-item {

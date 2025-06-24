@@ -1352,6 +1352,83 @@ jQuery(async () => {
     }
 
     // -----------------------------------------------------------------
+    // 6.5. 更新检查逻辑 (新功能)
+    // -----------------------------------------------------------------
+
+    /**
+     * 比较两个语义化版本号。
+     * @param {string} v1 版本号1 (例如 "2.1.0")
+     * @param {string} v2 版本号2 (例如 "2.0.10")
+     * @returns {number} 如果 v1 > v2 返回 1, v1 < v2 返回 -1, v1 == v2 返回 0。
+     */
+    function compareVersions(v1, v2) {
+        const parts1 = v1.replace('v', '').split('.').map(Number);
+        const parts2 = v2.replace('v', '').split('.').map(Number);
+        const len = Math.max(parts1.length, parts2.length);
+
+        for (let i = 0; i < len; i++) {
+            const p1 = parts1[i] || 0;
+            const p2 = parts2[i] || 0;
+            if (p1 > p2) return 1;
+            if (p1 < p2) return -1;
+        }
+        return 0;
+    }
+
+    /**
+     * 从 GitHub 和 Gitee 检查更新。
+     */
+    async function checkForUpdates() {
+        const localVersion = "2.1.0";
+        const githubRepo = "1830488003/preset-manager-momo";
+        const giteeRepo = "qq410847381/preset-manager-momo";
+        const githubApiUrl = `https://api.github.com/repos/${githubRepo}/releases/latest`;
+        const giteeApiUrl = `https://gitee.com/api/v5/repos/${giteeRepo}/releases/latest`;
+
+        const updateContainer = $("#momo-update-info-container");
+        const statusText = $("#momo-update-status-text");
+        const checkBtn = $("#momo-check-update-btn");
+
+        checkBtn.prop("disabled", true).find('i').addClass('fa-spin');
+        statusText.text("正在从 GitHub 和 Gitee 检查更新...");
+        updateContainer.show();
+
+        try {
+            const results = await Promise.allSettled([
+                fetch(githubApiUrl).then(res => res.json()),
+                fetch(giteeApiUrl).then(res => res.json())
+            ]);
+
+            const versions = results
+                .filter(result => result.status === 'fulfilled' && result.value.tag_name)
+                .map(result => result.value.tag_name);
+
+            if (versions.length === 0) {
+                throw new Error("无法从任何源获取版本信息。");
+            }
+
+            // 找出最新的远程版本
+            const latestRemoteVersion = versions.reduce((latest, current) => {
+                return compareVersions(current, latest) > 0 ? current : latest;
+            }, "0.0.0");
+
+            if (compareVersions(latestRemoteVersion, localVersion) > 0) {
+                const downloadUrl = `https://github.com/${githubRepo}/releases/latest`;
+                statusText.html(`发现新版本: <strong>${latestRemoteVersion}</strong>！请 <a href="${downloadUrl}" target="_blank">点击这里</a> 前往下载页面。`);
+            } else {
+                statusText.text("恭喜，您使用的已是最新版本！");
+            }
+
+        } catch (error) {
+            console.error(`[${extensionName}] Update check failed:`, error);
+            statusText.text(`检查更新失败: ${error.message}`);
+        } finally {
+            checkBtn.prop("disabled", false).find('i').removeClass('fa-spin');
+        }
+    }
+
+
+    // -----------------------------------------------------------------
     // 7. 初始化流程
     // -----------------------------------------------------------------
     async function initializeExtension() {
@@ -1386,6 +1463,7 @@ jQuery(async () => {
         presetListContainer = $("#momo-preset-list-container");
 
         // 4. 绑定事件 (同时绑定 click 和 touchend 以兼容移动端)
+        $("#momo-check-update-btn").on("click touchend", (e) => { e.preventDefault(); checkForUpdates(); });
         $(`#${CLOSE_BUTTON_ID}`).on("click touchend", (e) => { e.preventDefault(); closePopup(); });
         overlay.on("click touchend", function (event) {
             if (event.target === this) {
