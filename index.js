@@ -1376,14 +1376,17 @@ jQuery(async () => {
     }
 
     /**
-     * 从 GitHub 和 Gitee 检查更新，并提供更详细的错误反馈。
+     * 从 GitHub 和 Gitee 检查更新，通过直接拉取 manifest.json 文件来避免依赖 Release API。
+     * 这种方法更健壮，因为它不要求用户创建“发行版”。
      */
     async function checkForUpdates() {
-        const localVersion = "2.1.5";
+        const localVersion = "2.2.0";
         const githubRepo = "1830488003/preset-manager-momo";
         const giteeRepo = "qq410847381/preset-manager-momo";
-        const githubApiUrl = `https://api.github.com/repos/${githubRepo}/releases/latest`;
-        const giteeApiUrl = `https://gitee.com/api/v5/repos/${giteeRepo}/releases/latest`;
+        
+        // 直接构造指向 main 分支中 manifest.json 的原始文件链接
+        const githubUrl = `https://raw.githubusercontent.com/${githubRepo}/main/manifest.json`;
+        const giteeUrl = `https://gitee.com/${giteeRepo}/raw/main/manifest.json`;
 
         const updateContainer = $("#momo-update-info-container");
         const statusText = $("#momo-update-status-text");
@@ -1394,29 +1397,28 @@ jQuery(async () => {
         updateContainer.show();
 
         try {
+            // 并发请求两个源的 manifest.json
             const results = await Promise.allSettled([
-                fetch(githubApiUrl).then(res => {
-                    if (!res.ok) throw new Error(`GitHub API 错误: ${res.status}`);
+                fetch(githubUrl, { cache: 'no-store' }).then(res => {
+                    if (!res.ok) throw new Error(`GitHub 请求失败: ${res.status}`);
                     return res.json();
                 }),
-                fetch(giteeApiUrl).then(res => {
-                    if (!res.ok) throw new Error(`Gitee API 错误: ${res.status}`);
+                fetch(giteeUrl, { cache: 'no-store' }).then(res => {
+                    if (!res.ok) throw new Error(`Gitee 请求失败: ${res.status}`);
                     return res.json();
                 })
             ]);
 
+            // 从成功的结果中提取版本号
             const versions = results
-                .filter(result => result.status === 'fulfilled' && result.value.tag_name)
-                .map(result => result.value.tag_name);
+                .filter(result => result.status === 'fulfilled' && result.value.version)
+                .map(result => result.value.version);
 
             if (versions.length === 0) {
                 const errorDetails = results
                     .map((result, index) => {
                         if (result.status === 'rejected') {
                             const source = index === 0 ? 'GitHub' : 'Gitee';
-                            if (result.reason.message.includes('404')) {
-                                return `${source}: 未找到发布版本 (404)。提示：请确保仓库中已创建了“Release”。`;
-                            }
                             return `${source}: ${result.reason.message}`;
                         }
                         return null;
@@ -1424,16 +1426,17 @@ jQuery(async () => {
                     .filter(Boolean)
                     .join('; ');
                 
-                throw new Error(`无法获取版本信息。详情: ${errorDetails || '未知网络错误或API响应格式不正确'}`);
+                throw new Error(`无法从任何源获取版本信息。详情: ${errorDetails || '未知网络错误或API响应格式不正确'}`);
             }
 
+            // 找出最新的远程版本
             const latestRemoteVersion = versions.reduce((latest, current) => {
                 return compareVersions(current, latest) > 0 ? current : latest;
             }, "0.0.0");
 
             if (compareVersions(latestRemoteVersion, localVersion) > 0) {
-                const downloadUrl = `https://github.com/${githubRepo}/releases/latest`;
-                statusText.html(`发现新版本: <strong>${latestRemoteVersion}</strong>！请 <a href="${downloadUrl}" target="_blank">点击这里</a> 前往下载页面。`);
+                const downloadUrl = `https://github.com/${githubRepo}`;
+                statusText.html(`发现新版本: <strong>${latestRemoteVersion}</strong>！请前往 <a href="${downloadUrl}" target="_blank">GitHub 仓库</a> 手动更新。`);
             } else {
                 statusText.text("恭喜，您使用的已是最新版本！");
             }
