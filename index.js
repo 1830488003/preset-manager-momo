@@ -1357,112 +1357,18 @@ jQuery(async () => {
     }
 
     // -----------------------------------------------------------------
-    // 6.5. 更新检查逻辑 (新功能)
-    // -----------------------------------------------------------------
-
-    /**
-     * 比较两个语义化版本号。
-     * @param {string} v1 版本号1 (例如 "2.1.0")
-     * @param {string} v2 版本号2 (例如 "2.0.10")
-     * @returns {number} 如果 v1 > v2 返回 1, v1 < v2 返回 -1, v1 == v2 返回 0。
-     */
-    function compareVersions(v1, v2) {
-        const parts1 = v1.replace('v', '').split('.').map(Number);
-        const parts2 = v2.replace('v', '').split('.').map(Number);
-        const len = Math.max(parts1.length, parts2.length);
-
-        for (let i = 0; i < len; i++) {
-            const p1 = parts1[i] || 0;
-            const p2 = parts2[i] || 0;
-            if (p1 > p2) return 1;
-            if (p1 < p2) return -1;
-        }
-        return 0;
-    }
-
-    /**
-     * 从 GitHub 和 Gitee 检查更新，通过直接拉取 manifest.json 文件来避免依赖 Release API。
-     * 这种方法更健壮，因为它不要求用户创建“发行版”。
-     */
-    async function checkForUpdates() {
-        const localVersion = "2.2.1";
-        const githubRepo = "1830488003/preset-manager-momo";
-        const giteeRepo = "qq410847381/preset-manager-momo";
-        
-        // 直接构造指向 main 分支中 manifest.json 的原始文件链接
-        const githubUrl = `https://raw.githubusercontent.com/${githubRepo}/main/manifest.json`;
-        const giteeUrl = `https://gitee.com/${giteeRepo}/raw/main/manifest.json`;
-
-        const updateContainer = $("#momo-update-info-container");
-        const statusText = $("#momo-update-status-text");
-        const checkBtn = $("#momo-check-update-btn");
-
-        checkBtn.prop("disabled", true).find('i').addClass('fa-spin');
-        statusText.text("正在从 GitHub 和 Gitee 检查更新...");
-        updateContainer.show();
-
-        try {
-            // 并发请求两个源的 manifest.json
-            const results = await Promise.allSettled([
-                fetch(githubUrl, { cache: 'no-store' }).then(res => {
-                    if (!res.ok) throw new Error(`GitHub 请求失败: ${res.status}`);
-                    return res.json();
-                }),
-                fetch(giteeUrl, { cache: 'no-store' }).then(res => {
-                    if (!res.ok) throw new Error(`Gitee 请求失败: ${res.status}`);
-                    return res.json();
-                })
-            ]);
-
-            // 从成功的结果中提取版本号
-            const versions = results
-                .filter(result => result.status === 'fulfilled' && result.value.version)
-                .map(result => result.value.version);
-
-            if (versions.length === 0) {
-                const errorDetails = results
-                    .map((result, index) => {
-                        if (result.status === 'rejected') {
-                            const source = index === 0 ? 'GitHub' : 'Gitee';
-                            return `${source}: ${result.reason.message}`;
-                        }
-                        return null;
-                    })
-                    .filter(Boolean)
-                    .join('; ');
-                
-                throw new Error(`无法从任何源获取版本信息。详情: ${errorDetails || '未知网络错误或API响应格式不正确'}`);
-            }
-
-            // 找出最新的远程版本
-            const latestRemoteVersion = versions.reduce((latest, current) => {
-                return compareVersions(current, latest) > 0 ? current : latest;
-            }, "0.0.0");
-
-            if (compareVersions(latestRemoteVersion, localVersion) > 0) {
-                const downloadUrl = `https://github.com/${githubRepo}`;
-                statusText.html(`发现新版本: <strong>${latestRemoteVersion}</strong>！请前往 <a href="${downloadUrl}" target="_blank">GitHub 仓库</a> 手动更新。`);
-            } else {
-                statusText.text("恭喜，您使用的已是最新版本！");
-            }
-
-        } catch (error) {
-            console.error(`[${extensionName}] Update check failed:`, error);
-            statusText.text(`检查更新失败: ${error.message}`);
-        } finally {
-            checkBtn.prop("disabled", false).find('i').removeClass('fa-spin');
-        }
-    }
-
-
-    // -----------------------------------------------------------------
     // 7. 初始化流程
     // -----------------------------------------------------------------
     async function initializeExtension() {
-        // 1. 动态加载CSS
+        // 1. 动态加载CSS和JS
         $("head").append(
             `<link rel="stylesheet" type="text/css" href="${extensionFolderPath}/style.css?v=${Date.now()}">`
         );
+        // 动态加载 updater.js 脚本
+        const script = document.createElement('script');
+        script.src = `${extensionFolderPath}/updater.js?v=${Date.now()}`;
+        document.head.appendChild(script);
+
 
         // 2. 加载 HTML
         try {
@@ -1490,7 +1396,16 @@ jQuery(async () => {
         presetListContainer = $("#momo-preset-list-container");
 
         // 4. 绑定事件 (同时绑定 click 和 touchend 以兼容移动端)
-        $("#momo-check-update-btn").on("click touchend", (e) => { e.preventDefault(); checkForUpdates(); });
+        // 将更新按钮的事件绑定到新的 updater 逻辑
+        $("#momo-check-update-btn").on("click touchend", (e) => { 
+            e.preventDefault(); 
+            e.stopPropagation();
+            if (window.PresetManagerMomoUpdater) {
+                window.PresetManagerMomoUpdater.checkForUpdates();
+            } else {
+                toastr.error("更新脚本尚未加载，请稍候重试。");
+            }
+        });
         $(`#${CLOSE_BUTTON_ID}`).on("click touchend", (e) => { e.preventDefault(); closePopup(); });
         overlay.on("click touchend", function (event) {
             if (event.target === this) {
