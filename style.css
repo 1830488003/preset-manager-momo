@@ -44,7 +44,7 @@
 }
 
 /* --- 弹窗容器与布局 --- */
-.preset-manager-momo-popup-overlay {
+.pmm-popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -54,7 +54,7 @@
     z-index: 10001;
 }
 
-.momo-popup-container {
+.pmm-popup-container {
     position: fixed;
     top: 10vh; /* 调整：距离顶部10vh */
     left: 10vw; /* 调整：水平居中 (100vw - 80vw) / 2 */
@@ -77,7 +77,7 @@
 
 /* --- 桌面端响应式布局 --- */
 @media (min-width: 768px) {
-    .momo-popup-container {
+    .pmm-popup-container {
         /* 在桌面端恢复居中变换 */
         top: 50%;
         left: 50%;
@@ -88,7 +88,7 @@
     }
 }
 
-.momo-popup-close-button {
+.pmm-popup-close-button {
     position: absolute;
     top: 10px;
     right: 15px;
@@ -105,11 +105,11 @@
     z-index: 10;
 }
 
-.momo-popup-close-button:hover {
+.pmm-popup-close-button:hover {
     color: var(--text-color);
 }
 
-.momo-popup-body {
+.pmm-popup-body {
     flex-grow: 1;
     padding: 16px;
     overflow-y: auto;
@@ -119,27 +119,27 @@
 }
 
 /* 隐藏滚动条但保留功能 */
-.momo-popup-body::-webkit-scrollbar,
-.momo-book-list-container::-webkit-scrollbar,
-#momo-source-entries-container::-webkit-scrollbar,
-#momo-delete-preset-list::-webkit-scrollbar,
-#momo-delete-entry-list::-webkit-scrollbar,
-.momo-preset-list-container::-webkit-scrollbar {
+.pmm-popup-body::-webkit-scrollbar,
+.pmm-book-list-container::-webkit-scrollbar,
+#pmm-source-entries-container::-webkit-scrollbar,
+#pmm-delete-preset-list::-webkit-scrollbar,
+#pmm-delete-entry-list::-webkit-scrollbar,
+.pmm-preset-list-container::-webkit-scrollbar {
     display: none;
 }
 
-.momo-popup-body,
-.momo-book-list-container,
-#momo-source-entries-container,
-#momo-delete-preset-list,
-#momo-delete-entry-list,
-.momo-preset-list-container {
+.pmm-popup-body,
+.pmm-book-list-container,
+#pmm-source-entries-container,
+#pmm-delete-preset-list,
+#pmm-delete-entry-list,
+.pmm-preset-list-container {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
 
 /* --- 区块样式 --- */
-.momo-section {
+.pmm-section {
     background-color: var(--section-bg-color);
     border-radius: var(--border-radius);
     padding: 16px;
@@ -148,7 +148,7 @@
     gap: 12px;
 }
 
-.momo-section h3, .momo-section h4, .momo-section h5 {
+.pmm-section h3, .pmm-section h4, .pmm-section h5 {
     margin: 0;
     font-size: 1.2em;
     color: var(--primary-accent-color);
@@ -158,26 +158,26 @@
     align-items: center;
     gap: 8px;
 }
-.momo-section h4, .momo-section h5 {
+.pmm-section h4, .pmm-section h5 {
     font-size: 1.1em;
     color: var(--text-color);
     border-bottom: none;
 }
-.momo-section h5 {
+.pmm-section h5 {
     font-size: 1.0em;
     color: var(--text-muted-color);
     margin-top: 10px;
 }
 
 /* --- 按钮和控件 --- */
-.momo-actions {
+.pmm-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 10px;
 }
 
-.momo-button {
+.pmm-button {
     background-color: var(--primary-accent-color);
     color: var(--text-color);
     border: none;
@@ -192,38 +192,38 @@
     gap: 6px;
 }
 
-.momo-button:hover {
+.pmm-button:hover {
     background-color: var(--primary-accent-hover-color);
 }
 
-.momo-button:active {
+.pmm-button:active {
     transform: scale(0.98);
 }
 
-.momo-button.abandon { background-color: var(--danger-color); }
+.pmm-button.abandon { background-color: var(--danger-color); }
 
-.momo-button:disabled {
+.pmm-button:disabled {
     background-color: var(--border-color);
     cursor: not-allowed;
     opacity: 0.7;
 }
 
-.momo-description {
+.pmm-description {
     font-size: 0.9em;
     color: var(--text-muted-color);
     line-height: 1.5;
     margin: 0 0 10px 0;
 }
 
-.momo-no-tasks {
+.pmm-no-tasks {
     color: var(--text-muted-color);
     text-align: center;
     padding: 20px;
     font-style: italic;
 }
 
-/* --- momo 特有元素的兼容性样式 --- */
-.momo-edit-controls, .momo-modify-controls {
+/* --- pmm 特有元素的兼容性样式 --- */
+.pmm-edit-controls, .pmm-modify-controls {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -255,31 +255,31 @@
     appearance: none;
 }
 
-.momo-textarea {
+.pmm-textarea {
     resize: vertical;
     min-height: 80px;
 }
 
-.momo-textarea-label {
+.pmm-textarea-label {
     display: block;
     margin-top: 10px;
     font-weight: bold;
     color: var(--text-muted-color);
 }
 
-.momo-grid-container {
+.pmm-grid-container {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 10px;
     align-items: center;
 }
 
-.momo-disabled {
+.pmm-disabled {
     opacity: 0.5;
     pointer-events: none;
 }
 
-.momo-book-list-container {
+.pmm-book-list-container {
     display: flex;
     flex-direction: column; /* Changed to column for list-like behavior */
     gap: 8px;
@@ -291,7 +291,7 @@
     border: 1px solid var(--border-color);
 }
 
-.momo-preset-list-container {
+.pmm-preset-list-container {
     margin-top: 10px;
     background-color: var(--section-bg-color);
     border-radius: 5px;
@@ -303,7 +303,7 @@
     max-height: 450px; /* 新增：限制列表在桌面端的高度，防止其无限拉伸 */
 }
 
-.momo-preset-item {
+.pmm-preset-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -317,26 +317,26 @@
 }
 
 /* 移除最后一个项目的下外边距 */
-.momo-preset-item:last-child {
+.pmm-preset-item:last-child {
     margin-bottom: 0;
 }
 
-.momo-preset-item.active, .momo-preset-item:hover {
+.pmm-preset-item.active, .pmm-preset-item:hover {
     background-color: var(--primary-accent-color);
     border-color: var(--primary-accent-hover-color);
 }
 
-.momo-preset-item .preset-name {
+.pmm-preset-item .preset-name {
     font-weight: 500;
 }
 
-.momo-preset-item .preset-actions {
+.pmm-preset-item .preset-actions {
     display: flex; /* 将图标容器设为flex布局 */
     align-items: center;
     gap: 12px; /* 增加图标之间的水平间距 */
 }
 
-.momo-preset-item .preset-actions button {
+.pmm-preset-item .preset-actions button {
     background: none;
     border: none;
     color: var(--text-muted-color);
@@ -347,31 +347,31 @@
     line-height: 1; /* 确保图标垂直居中 */
 }
 
-.momo-preset-item .preset-actions button:hover {
+.pmm-preset-item .preset-actions button:hover {
     color: var(--text-color);
     transform: scale(1.1); /* 添加悬停效果 */
 }
 
-.momo-preset-item .preset-actions .delete-btn {
+.pmm-preset-item .preset-actions .delete-btn {
     color: var(--danger-color);
 }
-.momo-preset-item .preset-actions .delete-btn:hover {
+.pmm-preset-item .preset-actions .delete-btn:hover {
     color: #ff6b6b;
 }
 
-.momo-version-panel {
+.pmm-version-panel {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 15px;
 }
 
-.momo-version-panel p {
+.pmm-version-panel p {
     margin: 0;
 }
 
 /* --- 折叠面板样式 --- */
-#momo-advanced-params-section {
+#pmm-advanced-params-section {
     margin-top: 16px;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
@@ -379,36 +379,36 @@
     background-color: var(--section-bg-color);
 }
 
-#momo-advanced-params-section summary {
+#pmm-advanced-params-section summary {
     padding: 12px 16px;
     cursor: pointer;
     outline: none;
     transition: background-color 0.2s;
 }
 
-#momo-advanced-params-section summary:hover {
+#pmm-advanced-params-section summary:hover {
     background-color: var(--main-bg-color);
 }
 
-#momo-advanced-params-section summary h4 {
+#pmm-advanced-params-section summary h4 {
     display: inline;
     border-bottom: none;
     padding-bottom: 0;
 }
 
-#momo-advanced-params-section .momo-edit-controls {
+#pmm-advanced-params-section .pmm-edit-controls {
     padding: 16px;
     border-top: 1px solid var(--border-color);
 }
 
 
 /* --- 特定视图样式 --- */
-.momo-edit-controls, .momo-delete-controls, .momo-transfer-controls {
+.pmm-edit-controls, .pmm-delete-controls, .pmm-transfer-controls {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
-#momo-prompt-editor-container {
+#pmm-prompt-editor-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 15px;
@@ -427,7 +427,7 @@
 }
 
 /* 复选框项目样式 */
-.momo-checkbox-item {
+.pmm-checkbox-item {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -437,11 +437,11 @@
     transition: background-color 0.2s;
 }
 
-.momo-checkbox-item:hover {
+.pmm-checkbox-item:hover {
     background-color: var(--main-bg-color);
 }
 
-.momo-checkbox-item input[type="checkbox"] {
+.pmm-checkbox-item input[type="checkbox"] {
     /* 自定义复选框外观，使其更现代化 */
     appearance: none;
     -webkit-appearance: none;
@@ -454,13 +454,13 @@
     transition: background-color 0.2s, border-color 0.2s;
 }
 
-.momo-checkbox-item input[type="checkbox"]:checked {
+.pmm-checkbox-item input[type="checkbox"]:checked {
     background-color: var(--primary-accent-color);
     border-color: var(--primary-accent-hover-color);
 }
 
 /* 在选中的复选框上添加一个对勾符号 */
-.momo-checkbox-item input[type="checkbox"]:checked::after {
+.pmm-checkbox-item input[type="checkbox"]:checked::after {
     content: '✔';
     font-size: 14px;
     color: white;
@@ -470,7 +470,7 @@
     transform: translate(-50%, -50%);
 }
 
-.momo-checkbox-item label {
+.pmm-checkbox-item label {
     flex-grow: 1;
     cursor: pointer;
     color: var(--text-color);

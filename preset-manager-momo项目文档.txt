@@ -1,7 +1,7 @@
 # 项目名称：预设管理器 (Preset Manager Momo)
 
 ## 版本
-- **当前版本:** 2.3.0
+- **当前版本:** 2.4.0
 
 ## 核心功能
 1.  **预设切换:** 在一个独立的浮动窗口中，快速查看并加载SillyTavern中所有已保存的预设。
@@ -80,6 +80,16 @@
 - **用法:** `await stApi.deletePreset("My Old Preset");`
 
 ## 开发日志
+
+### **版本 2.4.0 (2025-06-29)**
+- **【核心重构与冲突修复】**: 彻底解决了与 `my-world-book-momo` 插件同时启用时产生的冲突问题。
+- **重构详情**:
+    1.  **问题根源**: 两个插件共享了相同的底层代码，导致 CSS 类名、HTML ID、JavaScript 函数和 localStorage 存储键名发生冲突。
+    2.  **解决方案**: 对 `preset-manager-momo` 进行了全面的标识符重命名。
+        -   **CSS**: 将 `style.css` 中所有通用的 `.momo-` 类名替换为独特的 `.pmm-` (Preset Manager Momo) 前缀。
+        -   **HTML**: 更新了 `popup.html` 和 `settings.html`，使其所有元素的 ID 和 class 与新的 CSS 选择器保持一致。
+        -   **JavaScript**: 重构了 `index.js`，将所有对 DOM 元素的选择器、事件绑定以及 `localStorage` 的键名全部更新为新的 `pmm-` 前缀，确保了逻辑的正确性和数据的隔离。
+- **最终效果**: `preset-manager-momo` 现在可以与 `my-world-book-momo` 或其他基于相同模板的插件和平共存，不会再发生任何UI或功能上的冲突，显著提升了插件的兼容性和稳定性。
 
 ### **版本 2.3.0 (2025-06-24)**
 - **【核心功能升级】**: 重构了整个更新机制，实现了真正的“一键更新”功能。
