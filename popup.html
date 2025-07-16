@@ -1,26 +1,37 @@
 <!-- 弹窗的UI -->
-<div id="pmm-popup-overlay" class="pmm-popup-overlay" style="display: none;">
+<div id="pmm-popup-overlay" class="pmm-popup-overlay" style="display: none">
     <div id="pmm-popup" class="pmm-popup-container">
-        <button id="pmm-popup-close-button" class="pmm-popup-close-button">&times;</button>
+        <button id="pmm-popup-close-button" class="pmm-popup-close-button">
+            &times;
+        </button>
         <div class="pmm-popup-body">
             <!-- 主视图 -->
             <div id="pmm-main-view">
                 <div class="pmm-section">
                     <h3><i class="fa-solid fa-list-check"></i> 预设列表</h3>
-                    <div id="pmm-preset-list-container" class="pmm-preset-list-container"></div>
+                    <div
+                        id="pmm-preset-list-container"
+                        class="pmm-preset-list-container"
+                    ></div>
                 </div>
 
                 <div class="pmm-section">
                     <div class="pmm-actions">
-                        <button id="pmm-goto-ai-create-btn" class="pmm-button">✨ AI创建条目</button>
-                        <button id="pmm-goto-delete-btn" class="pmm-button">🗑️ 批量删除</button>
-                        <button id="pmm-goto-transfer-btn" class="pmm-button">🔄 条目复制</button>
+                        <button id="pmm-goto-ai-create-btn" class="pmm-button">
+                            ✨ AI创建条目
+                        </button>
+                        <button id="pmm-goto-delete-btn" class="pmm-button">
+                            🗑️ 批量删除
+                        </button>
+                        <button id="pmm-goto-transfer-btn" class="pmm-button">
+                            🔄 条目复制
+                        </button>
                     </div>
                 </div>
             </div>
 
             <!-- 高级编辑视图 -->
-            <div id="pmm-edit-view" class="pmm-section" style="display: none;">
+            <div id="pmm-edit-view" class="pmm-section" style="display: none">
                 <h3><i class="fa-solid fa-pen-to-square"></i> 高级编辑</h3>
 
                 <!-- 条目编辑器 -->
@@ -28,114 +39,238 @@
                     <h4><i class="fa-solid fa-puzzle-piece"></i> 条目编辑</h4>
                     <div class="pmm-edit-controls">
                         <label for="pmm-entry-select">选择条目:</label>
-                        <select id="pmm-entry-select" class="pmm-select"></select>
-                        <div id="pmm-entry-editor-form" style="display: none;">
-                             <!-- 条目编辑表单将动态生成在这里 -->
-                             <label for="pmm-entry-name-input">名称:</label>
-                             <input type="text" id="pmm-entry-name-input" class="pmm-input">
-                             <label for="pmm-entry-content-textarea">内容:</label>
-                             <textarea id="pmm-entry-content-textarea" class="pmm-textarea" rows="8"></textarea>
-                             <!-- 其他条目字段可以在这里添加 -->
-                             <div class="pmm-actions">
-                                 <button id="pmm-save-entry-changes-btn" class="pmm-button">保存条目修改</button>
-                             </div>
-                             <label for="pmm-entry-ai-prompt" class="pmm-textarea-label">AI 辅助修改 (条目内容):</label>
-                             <textarea id="pmm-entry-ai-prompt" class="pmm-textarea" rows="3" placeholder="例如：将内容改写得更具描述性"></textarea>
-                             <div class="pmm-actions">
-                                 <button id="pmm-submit-entry-ai-btn" class="pmm-button">提交给AI</button>
-                             </div>
-                             <!-- AI结果展示和编辑区域 -->
-                             <div id="pmm-ai-result-container" style="display: none;">
-                                 <label for="pmm-ai-result-textarea" class="pmm-textarea-label">AI 生成内容 (可编辑):</label>
-                                 <textarea id="pmm-ai-result-textarea" class="pmm-textarea" rows="8"></textarea>
-                                 <div class="pmm-actions">
-                                     <button id="pmm-save-ai-result-btn" class="pmm-button">保存AI内容</button>
-                                     <button id="pmm-clear-ai-result-btn" class="pmm-button abandon">清空</button>
-                                 </div>
-                             </div>
+                        <select
+                            id="pmm-entry-select"
+                            class="pmm-select"
+                        ></select>
+                        <div id="pmm-entry-editor-form" style="display: none">
+                            <!-- 条目编辑表单将动态生成在这里 -->
+                            <label for="pmm-entry-name-input">名称:</label>
+                            <input
+                                type="text"
+                                id="pmm-entry-name-input"
+                                class="pmm-input"
+                            />
+                            <label for="pmm-entry-content-textarea"
+                                >内容:</label
+                            >
+                            <textarea
+                                id="pmm-entry-content-textarea"
+                                class="pmm-textarea"
+                                rows="8"
+                            ></textarea>
+                            <!-- 其他条目字段可以在这里添加 -->
+                            <div class="pmm-actions">
+                                <button
+                                    id="pmm-save-entry-changes-btn"
+                                    class="pmm-button"
+                                >
+                                    保存条目修改
+                                </button>
+                            </div>
+                            <label
+                                for="pmm-entry-ai-prompt"
+                                class="pmm-textarea-label"
+                                >AI 辅助修改 (条目内容):</label
+                            >
+                            <textarea
+                                id="pmm-entry-ai-prompt"
+                                class="pmm-textarea"
+                                rows="3"
+                                placeholder="例如：将内容改写得更具描述性"
+                            ></textarea>
+                            <div class="pmm-actions">
+                                <button
+                                    id="pmm-submit-entry-ai-btn"
+                                    class="pmm-button"
+                                >
+                                    提交给AI
+                                </button>
+                            </div>
+                            <!-- AI结果展示和编辑区域 -->
+                            <div
+                                id="pmm-ai-result-container"
+                                style="display: none"
+                            >
+                                <label
+                                    for="pmm-ai-result-textarea"
+                                    class="pmm-textarea-label"
+                                    >AI 生成内容 (可编辑):</label
+                                >
+                                <textarea
+                                    id="pmm-ai-result-textarea"
+                                    class="pmm-textarea"
+                                    rows="8"
+                                ></textarea>
+                                <div class="pmm-actions">
+                                    <button
+                                        id="pmm-save-ai-result-btn"
+                                        class="pmm-button"
+                                    >
+                                        保存AI内容
+                                    </button>
+                                    <button
+                                        id="pmm-clear-ai-result-btn"
+                                        class="pmm-button abandon"
+                                    >
+                                        清空
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- 高级参数设置 (可折叠) -->
                 <details id="pmm-advanced-params-section">
-                    <summary><h4><i class="fa-solid fa-sliders"></i> 高级参数设置</h4></summary>
+                    <summary>
+                        <h4>
+                            <i class="fa-solid fa-sliders"></i> 高级参数设置
+                        </h4>
+                    </summary>
                     <div class="pmm-edit-controls">
                         <div id="pmm-prompt-editor-container">
                             <!-- Prompt字段将动态生成在这里 -->
                         </div>
                         <div class="pmm-actions">
-                            <button id="pmm-save-manual-changes-btn" class="pmm-button">保存参数修改</button>
+                            <button
+                                id="pmm-save-manual-changes-btn"
+                                class="pmm-button"
+                            >
+                                保存参数修改
+                            </button>
                         </div>
                     </div>
                 </details>
 
-                 <div class="pmm-actions">
-                    <button class="pmm-button pmm-back-to-main-btn">返回</button>
+                <div class="pmm-actions">
+                    <button class="pmm-button pmm-back-to-main-btn">
+                        返回
+                    </button>
                 </div>
             </div>
 
             <!-- 批量删除视图 -->
-            <div id="pmm-delete-view" class="pmm-section" style="display: none;">
+            <div id="pmm-delete-view" class="pmm-section" style="display: none">
                 <h3><i class="fa-solid fa-trash-can"></i> 批量删除</h3>
                 <div class="pmm-delete-controls">
                     <label>选择要删除的预设:</label>
-                    <div id="pmm-delete-preset-list" class="pmm-book-list-container"></div>
+                    <div
+                        id="pmm-delete-preset-list"
+                        class="pmm-book-list-container"
+                    ></div>
                     <div class="pmm-actions">
-                        <button id="pmm-delete-selected-presets-btn" class="pmm-button abandon">删除选中的预设</button>
+                        <button
+                            id="pmm-delete-selected-presets-btn"
+                            class="pmm-button abandon"
+                        >
+                            删除选中的预设
+                        </button>
                     </div>
                     <label>选择要删除的条目 (从单个预设中):</label>
-                    <select id="pmm-delete-entry-preset-select" class="pmm-select"></select>
-                    <div id="pmm-delete-entry-list" class="pmm-book-list-container"></div>
-                     <div class="pmm-actions">
-                        <button id="pmm-delete-selected-entries-btn" class="pmm-button abandon">删除选中的条目</button>
+                    <select
+                        id="pmm-delete-entry-preset-select"
+                        class="pmm-select"
+                    ></select>
+                    <div
+                        id="pmm-delete-entry-list"
+                        class="pmm-book-list-container"
+                    ></div>
+                    <div class="pmm-actions">
+                        <button
+                            id="pmm-delete-selected-entries-btn"
+                            class="pmm-button abandon"
+                        >
+                            删除选中的条目
+                        </button>
                     </div>
                 </div>
-                 <div class="pmm-actions">
-                    <button class="pmm-button pmm-back-to-main-btn">返回</button>
+                <div class="pmm-actions">
+                    <button class="pmm-button pmm-back-to-main-btn">
+                        返回
+                    </button>
                 </div>
             </div>
 
             <!-- 条目复制视图 -->
-            <div id="pmm-transfer-view" class="pmm-section" style="display: none;">
+            <div
+                id="pmm-transfer-view"
+                class="pmm-section"
+                style="display: none"
+            >
                 <h3><i class="fa-solid fa-right-left"></i> 条目复制</h3>
                 <div class="pmm-transfer-controls">
                     <div class="pmm-grid-container">
                         <label for="pmm-source-preset-select">源预设:</label>
-                        <select id="pmm-source-preset-select" class="pmm-select"></select>
+                        <select
+                            id="pmm-source-preset-select"
+                            class="pmm-select"
+                        ></select>
                         <label for="pmm-target-preset-select">目标预设:</label>
-                        <select id="pmm-target-preset-select" class="pmm-select"></select>
+                        <select
+                            id="pmm-target-preset-select"
+                            class="pmm-select"
+                        ></select>
                     </div>
                     <label class="pmm-textarea-label">选择要复制的条目:</label>
-                    <div id="pmm-source-entries-container" class="pmm-book-list-container" style="height: 200px;"></div>
+                    <div
+                        id="pmm-source-entries-container"
+                        class="pmm-book-list-container"
+                        style="height: 200px"
+                    ></div>
                     <div class="pmm-actions">
-                        <button id="pmm-transfer-entries-btn" class="pmm-button">执行复制</button>
+                        <button
+                            id="pmm-transfer-entries-btn"
+                            class="pmm-button"
+                        >
+                            执行复制
+                        </button>
                     </div>
                 </div>
-                 <div class="pmm-actions">
-                    <button class="pmm-button pmm-back-to-main-btn">返回</button>
+                <div class="pmm-actions">
+                    <button class="pmm-button pmm-back-to-main-btn">
+                        返回
+                    </button>
                 </div>
             </div>
 
             <!-- AI 创建条目视图 -->
-            <div id="pmm-ai-create-view" class="pmm-section" style="display: none;">
-                <h3><i class="fa-solid fa-wand-magic-sparkles"></i> AI 创建新条目</h3>
+            <div
+                id="pmm-ai-create-view"
+                class="pmm-section"
+                style="display: none"
+            >
+                <h3>
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI
+                    创建新条目
+                </h3>
                 <div class="pmm-form-group">
                     <label for="pmm-ai-create-target-preset">添加到预设:</label>
-                    <select id="pmm-ai-create-target-preset" class="pmm-select"></select>
+                    <select
+                        id="pmm-ai-create-target-preset"
+                        class="pmm-select"
+                    ></select>
                 </div>
                 <div class="pmm-form-group">
                     <label for="pmm-ai-create-prompt">创建要求:</label>
-                    <textarea id="pmm-ai-create-prompt" class="pmm-textarea" rows="3" placeholder="例如：生成一个让NPC更主动、更智能的条目"></textarea>
+                    <textarea
+                        id="pmm-ai-create-prompt"
+                        class="pmm-textarea"
+                        rows="3"
+                        placeholder="例如：生成一个让NPC更主动、更智能的条目"
+                    ></textarea>
                 </div>
                 <div class="pmm-actions">
-                    <button id="pmm-ai-create-btn" class="pmm-button">✨ AI 创建</button>
+                    <button id="pmm-ai-create-btn" class="pmm-button">
+                        ✨ AI 创建
+                    </button>
                 </div>
                 <div class="pmm-actions">
-                   <button class="pmm-button pmm-back-to-main-btn">返回</button>
-               </div>
-           </div>
-
+                    <button class="pmm-button pmm-back-to-main-btn">
+                        返回
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -12,7 +12,7 @@
     --border-color: #40444b;
     --font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     --border-radius: 8px;
-    --box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+    --box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
 }
 
 /* --- 浮动按钮 --- */
@@ -29,18 +29,23 @@
     justify-content: center;
     color: var(--primary-accent-color);
     font-size: 24px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3), 
-                inset 0 2px 2px rgba(255,255,255,0.05),
-                0 0 0 1px rgba(0,0,0,0.5);
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, color 0.2s ease-out;
+    box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        inset 0 2px 2px rgba(255, 255, 255, 0.05),
+        0 0 0 1px rgba(0, 0, 0, 0.5);
+    transition:
+        transform 0.2s ease-out,
+        box-shadow 0.2s ease-out,
+        color 0.2s ease-out;
 }
 
 #preset-manager-momo-button:hover {
     transform: scale(1.1);
     color: var(--primary-accent-hover-color);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.4), 
-                inset 0 2px 3px rgba(255,255,255,0.08),
-                0 0 10px var(--primary-accent-color); /* Glow effect */
+    box-shadow:
+        0 6px 12px rgba(0, 0, 0, 0.4),
+        inset 0 2px 3px rgba(255, 255, 255, 0.08),
+        0 0 10px var(--primary-accent-color); /* Glow effect */
 }
 
 /* --- 弹窗容器与布局 --- */
@@ -62,14 +67,14 @@
     width: 80vw; /* 调整：宽度为80vw */
     height: 80vh; /* 调整：高度为80vh */
     max-height: 80vh; /* 调整：与height保持一致 */
-    
+
     background-color: var(--main-bg-color);
     color: var(--text-color);
     font-family: var(--font-family);
-    
+
     display: flex;
     flex-direction: column;
-    
+
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     border: 1px solid var(--border-color);
@@ -134,8 +139,8 @@
 #pmm-delete-preset-list,
 #pmm-delete-entry-list,
 .pmm-preset-list-container {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
 /* --- 区块样式 --- */
@@ -148,7 +153,9 @@
     gap: 12px;
 }
 
-.pmm-section h3, .pmm-section h4, .pmm-section h5 {
+.pmm-section h3,
+.pmm-section h4,
+.pmm-section h5 {
     margin: 0;
     font-size: 1.2em;
     color: var(--primary-accent-color);
@@ -158,13 +165,14 @@
     align-items: center;
     gap: 8px;
 }
-.pmm-section h4, .pmm-section h5 {
+.pmm-section h4,
+.pmm-section h5 {
     font-size: 1.1em;
     color: var(--text-color);
     border-bottom: none;
 }
 .pmm-section h5 {
-    font-size: 1.0em;
+    font-size: 1em;
     color: var(--text-muted-color);
     margin-top: 10px;
 }
@@ -186,7 +194,9 @@
     cursor: pointer;
     font-size: 0.9em;
     font-weight: 500;
-    transition: background-color 0.2s, transform 0.1s;
+    transition:
+        background-color 0.2s,
+        transform 0.1s;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -200,7 +210,9 @@
     transform: scale(0.98);
 }
 
-.pmm-button.abandon { background-color: var(--danger-color); }
+.pmm-button.abandon {
+    background-color: var(--danger-color);
+}
 
 .pmm-button:disabled {
     background-color: var(--border-color);
@@ -223,19 +235,20 @@
 }
 
 /* --- pmm 特有元素的兼容性样式 --- */
-.pmm-edit-controls, .pmm-modify-controls {
+.pmm-edit-controls,
+.pmm-modify-controls {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
 /* --- 自包含的、高优先级的输入框样式，以覆盖主题冲突 --- */
-#preset-manager-momo-popup input[type="text"],
-#preset-manager-momo-popup input[type="number"],
+#preset-manager-momo-popup input[type='text'],
+#preset-manager-momo-popup input[type='number'],
 #preset-manager-momo-popup select,
 #preset-manager-momo-popup textarea {
     background-color: #23272a !important; /* 硬编码的深色背景 */
-    color: #FFFFFF !important; /* 硬编码的浅色文字 */
+    color: #ffffff !important; /* 硬编码的浅色文字 */
     border: 1px solid #40444b !important; /* 硬编码的边框颜色 */
     padding: 10px;
     border-radius: 5px;
@@ -248,8 +261,8 @@
 #preset-manager-momo-popup select {
     background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
     background-repeat: no-repeat;
-    background-position: right .7em top 50%;
-    background-size: .65em auto;
+    background-position: right 0.7em top 50%;
+    background-size: 0.65em auto;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -312,7 +325,9 @@
     border-radius: 5px;
     background-color: var(--main-bg-color); /* 更改背景色以与容器区分 */
     border: 1px solid var(--border-color);
-    transition: background-color 0.2s, border-color 0.2s;
+    transition:
+        background-color 0.2s,
+        border-color 0.2s;
     margin-bottom: 6px; /* 增加项目间距 */
 }
 
@@ -321,7 +336,8 @@
     margin-bottom: 0;
 }
 
-.pmm-preset-item.active, .pmm-preset-item:hover {
+.pmm-preset-item.active,
+.pmm-preset-item:hover {
     background-color: var(--primary-accent-color);
     border-color: var(--primary-accent-hover-color);
 }
@@ -343,7 +359,9 @@
     cursor: pointer;
     font-size: 1.4em; /* 增大图标字体大小 */
     padding: 5px; /* 增加点击区域 */
-    transition: color 0.2s, transform 0.2s;
+    transition:
+        color 0.2s,
+        transform 0.2s;
     line-height: 1; /* 确保图标垂直居中 */
 }
 
@@ -401,9 +419,10 @@
     border-top: 1px solid var(--border-color);
 }
 
-
 /* --- 特定视图样式 --- */
-.pmm-edit-controls, .pmm-delete-controls, .pmm-transfer-controls {
+.pmm-edit-controls,
+.pmm-delete-controls,
+.pmm-transfer-controls {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -441,7 +460,7 @@
     background-color: var(--main-bg-color);
 }
 
-.pmm-checkbox-item input[type="checkbox"] {
+.pmm-checkbox-item input[type='checkbox'] {
     /* 自定义复选框外观，使其更现代化 */
     appearance: none;
     -webkit-appearance: none;
@@ -451,16 +470,18 @@
     border-radius: 4px;
     cursor: pointer;
     position: relative;
-    transition: background-color 0.2s, border-color 0.2s;
+    transition:
+        background-color 0.2s,
+        border-color 0.2s;
 }
 
-.pmm-checkbox-item input[type="checkbox"]:checked {
+.pmm-checkbox-item input[type='checkbox']:checked {
     background-color: var(--primary-accent-color);
     border-color: var(--primary-accent-hover-color);
 }
 
 /* 在选中的复选框上添加一个对勾符号 */
-.pmm-checkbox-item input[type="checkbox"]:checked::after {
+.pmm-checkbox-item input[type='checkbox']:checked::after {
     content: '✔';
     font-size: 14px;
     color: white;

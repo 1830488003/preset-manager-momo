@@ -1,12 +1,12 @@
 {
-  "display_name": "预设管理器 (Preset Manager Momo)",
-  "loading_order": 1002,
-  "requires": [],
-  "optional": [],
-  "js": "index.js",
-  "css": "style.css",
-  "author": "默默",
-  "version": "2.4.01",
-  "homePage": "https://github.com/1830488003/preset-manager-momo",
-  "auto_update": true
+    "display_name": "预设管理器 (Preset Manager Momo)",
+    "loading_order": 1002,
+    "requires": [],
+    "optional": [],
+    "js": "index.js",
+    "css": "style.css",
+    "author": "默默",
+    "version": "2.4.01",
+    "homePage": "https://github.com/1830488003/preset-manager-momo",
+    "auto_update": true
 }

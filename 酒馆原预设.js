@@ -23,20 +23,38 @@ import { kai_settings } from './kai-settings.js';
 import { convertNovelPreset } from './nai-settings.js';
 import { openai_settings, openai_setting_names } from './openai.js';
 import { Popup, POPUP_RESULT, POPUP_TYPE } from './popup.js';
-import { context_presets, getContextSettings, power_user } from './power-user.js';
+import {
+    context_presets,
+    getContextSettings,
+    power_user,
+} from './power-user.js';
 import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument } from './slash-commands/SlashCommandArgument.js';
+import {
+    ARGUMENT_TYPE,
+    SlashCommandArgument,
+} from './slash-commands/SlashCommandArgument.js';
 import { enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.js';
+import {
+    SlashCommandEnumValue,
+    enumTypes,
+} from './slash-commands/SlashCommandEnumValue.js';
 import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { checkForSystemPromptInInstructTemplate, system_prompts } from './sysprompt.js';
+import {
+    checkForSystemPromptInInstructTemplate,
+    system_prompts,
+} from './sysprompt.js';
 import { renderTemplateAsync } from './templates.js';
 import {
     textgenerationwebui_preset_names,
     textgenerationwebui_presets,
     textgenerationwebui_settings as textgen_settings,
 } from './textgen-settings.js';
-import { download, equalsIgnoreCaseAndAccents, parseJsonFile, waitUntilCondition } from './utils.js';
+import {
+    download,
+    equalsIgnoreCaseAndAccents,
+    parseJsonFile,
+    waitUntilCondition,
+} from './utils.js';
 import { t } from './i18n.js';
 import { reasoning_templates } from './reasoning.js';
 
@@ -53,7 +71,9 @@ function autoSelectPreset() {
         return;
     }
 
-    const name = selected_group ? groups.find(x => x.id == selected_group)?.name : characters[this_chid]?.name;
+    const name = selected_group
+        ? groups.find((x) => x.id == selected_group)?.name
+        : characters[this_chid]?.name;
 
     if (!name) {
         console.debug(`Preset candidate not found for API: ${main_api}`);
@@ -64,7 +84,9 @@ function autoSelectPreset() {
     const selectedPreset = presetManager.getSelectedPreset();
 
     if (preset === selectedPreset) {
-        console.debug(`Preset already selected for API: ${main_api}, name: ${name}`);
+        console.debug(
+            `Preset already selected for API: ${main_api}, name: ${name}`,
+        );
         return;
     }
 
@@ -111,7 +133,7 @@ class PresetManager {
     }
 
     static masterSections = {
-        'instruct': {
+        instruct: {
             name: 'Instruct Template',
             getData: () => {
                 const manager = getPresetManager('instruct');
@@ -125,7 +147,7 @@ class PresetManager {
             },
             isValid: (data) => PresetManager.isPossiblyInstructData(data),
         },
-        'context': {
+        context: {
             name: 'Context Template',
             getData: () => {
                 const manager = getPresetManager('context');
@@ -139,7 +161,7 @@ class PresetManager {
             },
             isValid: (data) => PresetManager.isPossiblyContextData(data),
         },
-        'sysprompt': {
+        sysprompt: {
             name: 'System Prompt',
             getData: () => {
                 const manager = getPresetManager('sysprompt');
@@ -153,7 +175,7 @@ class PresetManager {
             },
             isValid: (data) => PresetManager.isPossiblySystemPromptData(data),
         },
-        'preset': {
+        preset: {
             name: 'Text Completion Preset',
             getData: () => {
                 const manager = getPresetManager('textgenerationwebui');
@@ -169,7 +191,7 @@ class PresetManager {
             },
             isValid: (data) => PresetManager.isPossiblyTextCompletionData(data),
         },
-        'reasoning': {
+        reasoning: {
             name: 'Reasoning Formatting',
             getData: () => {
                 const manager = getPresetManager('reasoning');
@@ -187,27 +209,44 @@ class PresetManager {
 
     static isPossiblyInstructData(data) {
         const instructProps = ['name', 'input_sequence', 'output_sequence'];
-        return data && instructProps.every(prop => Object.keys(data).includes(prop));
+        return (
+            data &&
+            instructProps.every((prop) => Object.keys(data).includes(prop))
+        );
     }
 
     static isPossiblyContextData(data) {
         const contextProps = ['name', 'story_string'];
-        return data && contextProps.every(prop => Object.keys(data).includes(prop));
+        return (
+            data &&
+            contextProps.every((prop) => Object.keys(data).includes(prop))
+        );
     }
 
     static isPossiblySystemPromptData(data) {
         const sysPromptProps = ['name', 'content'];
-        return data && sysPromptProps.every(prop => Object.keys(data).includes(prop));
+        return (
+            data &&
+            sysPromptProps.every((prop) => Object.keys(data).includes(prop))
+        );
     }
 
     static isPossiblyTextCompletionData(data) {
         const textCompletionProps = ['temp', 'top_k', 'top_p', 'rep_pen'];
-        return data && textCompletionProps.every(prop => Object.keys(data).includes(prop));
+        return (
+            data &&
+            textCompletionProps.every((prop) =>
+                Object.keys(data).includes(prop),
+            )
+        );
     }
 
     static isPossiblyReasoningData(data) {
         const reasoningProps = ['name', 'prefix', 'suffix', 'separator'];
-        return data && reasoningProps.every(prop => Object.keys(data).includes(prop));
+        return (
+            data &&
+            reasoningProps.every((prop) => Object.keys(data).includes(prop))
+        );
     }
 
     /**
@@ -225,32 +264,62 @@ class PresetManager {
         // Check for legacy file imports
         // 1. Instruct Template
         if (this.isPossiblyInstructData(data)) {
-            toastr.info(t`Importing instruct template...`, t`Instruct template detected`);
-            return await getPresetManager('instruct').savePreset(data.name, data);
+            toastr.info(
+                t`Importing instruct template...`,
+                t`Instruct template detected`,
+            );
+            return await getPresetManager('instruct').savePreset(
+                data.name,
+                data,
+            );
         }
 
         // 2. Context Template
         if (this.isPossiblyContextData(data)) {
-            toastr.info(t`Importing as context template...`, t`Context template detected`);
-            return await getPresetManager('context').savePreset(data.name, data);
+            toastr.info(
+                t`Importing as context template...`,
+                t`Context template detected`,
+            );
+            return await getPresetManager('context').savePreset(
+                data.name,
+                data,
+            );
         }
 
         // 3. System Prompt
         if (this.isPossiblySystemPromptData(data)) {
-            toastr.info(t`Importing as system prompt...`, t`System prompt detected`);
-            return await getPresetManager('sysprompt').savePreset(data.name, data);
+            toastr.info(
+                t`Importing as system prompt...`,
+                t`System prompt detected`,
+            );
+            return await getPresetManager('sysprompt').savePreset(
+                data.name,
+                data,
+            );
         }
 
         // 4. Text Completion settings
         if (this.isPossiblyTextCompletionData(data)) {
-            toastr.info(t`Importing as settings preset...`, t`Text Completion settings detected`);
-            return await getPresetManager('textgenerationwebui').savePreset(fileName, data);
+            toastr.info(
+                t`Importing as settings preset...`,
+                t`Text Completion settings detected`,
+            );
+            return await getPresetManager('textgenerationwebui').savePreset(
+                fileName,
+                data,
+            );
         }
 
         // 5. Reasoning Template
         if (this.isPossiblyReasoningData(data)) {
-            toastr.info(t`Importing as reasoning template...`, t`Reasoning template detected`);
-            return await getPresetManager('reasoning').savePreset(data.name, data);
+            toastr.info(
+                t`Importing as reasoning template...`,
+                t`Reasoning template detected`,
+            );
+            return await getPresetManager('reasoning').savePreset(
+                data.name,
+                data,
+            );
         }
 
         const validSections = [];
@@ -266,11 +335,19 @@ class PresetManager {
         }
 
         const sectionNames = validSections.reduce((acc, key) => {
-            acc[key] = { key: key, name: this.masterSections[key].name, preset: data[key]?.name || '' };
+            acc[key] = {
+                key: key,
+                name: this.masterSections[key].name,
+                preset: data[key]?.name || '',
+            };
             return acc;
         }, {});
 
-        const html = $(await renderTemplateAsync('masterImport', { sections: sectionNames }));
+        const html = $(
+            await renderTemplateAsync('masterImport', {
+                sections: sectionNames,
+            }),
+        );
         const popup = new Popup(html, POPUP_TYPE.CONFIRM, '', {
             okButton: t`Import`,
             cancelButton: t`Cancel`,
@@ -284,7 +361,10 @@ class PresetManager {
         }
 
         const importedSections = [];
-        const confirmedSections = html.find('input:checked').map((_, el) => el instanceof HTMLInputElement && el.value).get();
+        const confirmedSections = html
+            .find('input:checked')
+            .map((_, el) => el instanceof HTMLInputElement && el.value)
+            .get();
 
         if (confirmedSections.length === 0) {
             toastr.info(t`No sections selected for import`);
@@ -300,7 +380,9 @@ class PresetManager {
             }
         }
 
-        toastr.success(t`Imported ${importedSections.length} settings: ${importedSections.join(', ')}`);
+        toastr.success(
+            t`Imported ${importedSections.length} settings: ${importedSections.join(', ')}`,
+        );
     }
 
     /**
@@ -308,11 +390,22 @@ class PresetManager {
      * @returns {Promise<string>} JSON data
      */
     static async performMasterExport() {
-        const sectionNames = Object.entries(this.masterSections).reduce((acc, [key, section]) => {
-            acc[key] = { key: key, name: section.name, checked: key !== 'preset' };
-            return acc;
-        }, {});
-        const html = $(await renderTemplateAsync('masterExport', { sections: sectionNames }));
+        const sectionNames = Object.entries(this.masterSections).reduce(
+            (acc, [key, section]) => {
+                acc[key] = {
+                    key: key,
+                    name: section.name,
+                    checked: key !== 'preset',
+                };
+                return acc;
+            },
+            {},
+        );
+        const html = $(
+            await renderTemplateAsync('masterExport', {
+                sections: sectionNames,
+            }),
+        );
 
         const popup = new Popup(html, POPUP_TYPE.CONFIRM, '', {
             okButton: t`Export`,
@@ -326,7 +419,10 @@ class PresetManager {
             return;
         }
 
-        const confirmedSections = html.find('input:checked').map((_, el) => el instanceof HTMLInputElement && el.value).get();
+        const confirmedSections = html
+            .find('input:checked')
+            .map((_, el) => el instanceof HTMLInputElement && el.value)
+            .get();
         const data = {};
 
         if (confirmedSections.length === 0) {
@@ -349,7 +445,10 @@ class PresetManager {
      * @returns {string[]} List of preset names
      */
     getAllPresets() {
-        return $(this.select).find('option').map((_, el) => el.text).toArray();
+        return $(this.select)
+            .find('option')
+            .map((_, el) => el.text)
+            .toArray();
     }
 
     /**
@@ -358,9 +457,12 @@ class PresetManager {
      * @returns {any} Preset value
      */
     findPreset(name) {
-        return $(this.select).find('option').filter(function () {
-            return $(this).text() === name;
-        }).val();
+        return $(this.select)
+            .find('option')
+            .filter(function () {
+                return $(this).text() === name;
+            })
+            .val();
     }
 
     /**
@@ -403,14 +505,22 @@ class PresetManager {
         const name = selected.text();
         await this.savePreset(name);
 
-        const successToast = !this.isAdvancedFormatting() ? t`Preset updated` : t`Template updated`;
+        const successToast = !this.isAdvancedFormatting()
+            ? t`Preset updated`
+            : t`Template updated`;
         toastr.success(successToast);
     }
 
     async savePresetAs() {
         const inputValue = this.getSelectedPresetName();
-        const popupText = !this.isAdvancedFormatting() ? '<h4>' + t`Hint: Use a character/group name to bind preset to a specific chat.` + '</h4>' : '';
-        const headerText = !this.isAdvancedFormatting() ? t`Preset name:` : t`Template name:`;
+        const popupText = !this.isAdvancedFormatting()
+            ? '<h4>' +
+              t`Hint: Use a character/group name to bind preset to a specific chat.` +
+              '</h4>'
+            : '';
+        const headerText = !this.isAdvancedFormatting()
+            ? t`Preset name:`
+            : t`Template name:`;
         const name = await Popup.show.input(headerText, popupText, inputValue);
         if (!name) {
             console.log('Preset name not provided');
@@ -419,7 +529,9 @@ class PresetManager {
 
         await this.savePreset(name);
 
-        const successToast = !this.isAdvancedFormatting() ? t`Preset saved` : t`Template saved`;
+        const successToast = !this.isAdvancedFormatting()
+            ? t`Preset saved`
+            : t`Template saved`;
         toastr.success(successToast);
     }
 
@@ -441,7 +553,10 @@ class PresetManager {
         });
 
         if (!response.ok) {
-            toastr.error(t`Check the server connection and reload the page to prevent data loss.`, t`Preset could not be saved`);
+            toastr.error(
+                t`Check the server connection and reload the page to prevent data loss.`,
+                t`Preset could not be saved`,
+            );
             console.error('Preset could not be saved', response);
             throw new Error('Preset could not be saved');
         }
@@ -461,11 +576,13 @@ class PresetManager {
             await this.savePreset(newName);
             await this.deletePreset(oldName);
         } catch (error) {
-            toastr.error(t`Check the server connection and reload the page to prevent data loss.`, t`Preset could not be renamed`);
+            toastr.error(
+                t`Check the server connection and reload the page to prevent data loss.`,
+                t`Preset could not be renamed`,
+            );
             console.error('Preset could not be renamed', error);
             throw new Error('Preset could not be renamed');
         }
-
     }
 
     getPresetList(api) {
@@ -497,19 +614,19 @@ class PresetManager {
                 break;
             case 'context':
                 presets = context_presets;
-                preset_names = context_presets.map(x => x.name);
+                preset_names = context_presets.map((x) => x.name);
                 break;
             case 'instruct':
                 presets = instruct_presets;
-                preset_names = instruct_presets.map(x => x.name);
+                preset_names = instruct_presets.map((x) => x.name);
                 break;
             case 'sysprompt':
                 presets = system_prompts;
-                preset_names = system_prompts.map(x => x.name);
+                preset_names = system_prompts.map((x) => x.name);
                 break;
             case 'reasoning':
                 presets = reasoning_templates;
-                preset_names = reasoning_templates.map(x => x.name);
+                preset_names = reasoning_templates.map((x) => x.name);
                 break;
             default:
                 console.warn(`Unknown API ID ${api}`);
@@ -519,42 +636,58 @@ class PresetManager {
     }
 
     isKeyedApi() {
-        return this.apiId == 'textgenerationwebui' || this.isAdvancedFormatting();
+        return (
+            this.apiId == 'textgenerationwebui' || this.isAdvancedFormatting()
+        );
     }
 
     isAdvancedFormatting() {
-        return  ['context', 'instruct', 'sysprompt', 'reasoning'].includes(this.apiId);
+        return ['context', 'instruct', 'sysprompt', 'reasoning'].includes(
+            this.apiId,
+        );
     }
 
     updateList(name, preset) {
         const { presets, preset_names } = this.getPresetList();
-        const presetExists = this.isKeyedApi() ? preset_names.includes(name) : Object.keys(preset_names).includes(name);
+        const presetExists = this.isKeyedApi()
+            ? preset_names.includes(name)
+            : Object.keys(preset_names).includes(name);
 
         if (presetExists) {
             if (this.isKeyedApi()) {
                 presets[preset_names.indexOf(name)] = preset;
-                $(this.select).find(`option[value="${name}"]`).prop('selected', true);
+                $(this.select)
+                    .find(`option[value="${name}"]`)
+                    .prop('selected', true);
                 $(this.select).val(name).trigger('change');
-            }
-            else {
+            } else {
                 const value = preset_names[name];
                 presets[value] = preset;
-                $(this.select).find(`option[value="${value}"]`).prop('selected', true);
+                $(this.select)
+                    .find(`option[value="${value}"]`)
+                    .prop('selected', true);
                 $(this.select).val(value).trigger('change');
             }
-        }
-        else {
+        } else {
             presets.push(preset);
             const value = presets.length - 1;
 
             if (this.isKeyedApi()) {
                 preset_names[value] = name;
-                const option = $('<option></option>', { value: name, text: name, selected: true });
+                const option = $('<option></option>', {
+                    value: name,
+                    text: name,
+                    selected: true,
+                });
                 $(this.select).append(option);
                 $(this.select).val(name).trigger('change');
             } else {
                 preset_names[name] = value;
-                const option = $('<option></option>', { value: value, text: name, selected: true });
+                const option = $('<option></option>', {
+                    value: value,
+                    text: name,
+                    selected: true,
+                });
                 $(this.select).append(option);
                 $(this.select).val(value).trigger('change');
             }
@@ -577,18 +710,27 @@ class PresetManager {
                     return context_preset;
                 }
                 case 'instruct': {
-                    const instruct_preset = structuredClone(power_user.instruct);
-                    instruct_preset['name'] = name || power_user.instruct.preset;
+                    const instruct_preset = structuredClone(
+                        power_user.instruct,
+                    );
+                    instruct_preset['name'] =
+                        name || power_user.instruct.preset;
                     return instruct_preset;
                 }
                 case 'sysprompt': {
-                    const sysprompt_preset = structuredClone(power_user.sysprompt);
-                    sysprompt_preset['name'] = name || power_user.sysprompt.preset;
+                    const sysprompt_preset = structuredClone(
+                        power_user.sysprompt,
+                    );
+                    sysprompt_preset['name'] =
+                        name || power_user.sysprompt.preset;
                     return sysprompt_preset;
                 }
                 case 'reasoning': {
-                    const reasoning_preset = structuredClone(power_user.reasoning);
-                    reasoning_preset['name'] = name || power_user.reasoning.preset;
+                    const reasoning_preset = structuredClone(
+                        power_user.reasoning,
+                    );
+                    reasoning_preset['name'] =
+                        name || power_user.reasoning.preset;
                     return reasoning_preset;
                 }
                 default:
@@ -667,11 +809,13 @@ class PresetManager {
         let preset;
 
         // Some APIs use an array of names, others use an object of {name: index}
-        if (Array.isArray(preset_names)) {  // array of names
+        if (Array.isArray(preset_names)) {
+            // array of names
             if (preset_names.includes(name)) {
                 preset = presets[preset_names.indexOf(name)];
             }
-        } else {  // object of {names: index}
+        } else {
+            // object of {names: index}
             if (preset_names[name] !== undefined) {
                 preset = presets[preset_names[name]];
             }
@@ -688,7 +832,11 @@ class PresetManager {
     // pass no arguments to delete current preset
     async deletePreset(name) {
         const { preset_names, presets } = this.getPresetList();
-        const value = name ? (this.isKeyedApi() ? this.findPreset(name) : name) : this.getSelectedPreset();
+        const value = name
+            ? this.isKeyedApi()
+                ? this.findPreset(name)
+                : name
+            : this.getSelectedPreset();
         const nameToDelete = name || this.getSelectedPresetName();
 
         if (value == 'gui') {
@@ -712,7 +860,9 @@ class PresetManager {
         if (Object.keys(preset_names).length && switchPresets) {
             const nextPresetName = Object.keys(preset_names)[0];
             const newValue = preset_names[nextPresetName];
-            $(this.select).find(`option[value="${newValue}"]`).attr('selected', 'true');
+            $(this.select)
+                .find(`option[value="${newValue}"]`)
+                .attr('selected', 'true');
             $(this.select).trigger('change');
         }
 
@@ -733,7 +883,9 @@ class PresetManager {
         });
 
         if (!response.ok) {
-            const errorToast = !this.isAdvancedFormatting() ? t`Failed to restore default preset` : t`Failed to restore default template`;
+            const errorToast = !this.isAdvancedFormatting()
+                ? t`Failed to restore default preset`
+                : t`Failed to restore default template`;
             toastr.error(errorToast);
             return;
         }
@@ -760,7 +912,9 @@ async function presetCommandCallback(_, name) {
     }
 
     if (!name) {
-        console.log('No name provided for /preset command, using current preset');
+        console.log(
+            'No name provided for /preset command, using current preset',
+        );
         return currentPreset;
     }
 
@@ -770,7 +924,9 @@ async function presetCommandCallback(_, name) {
     }
 
     // Find exact match
-    const exactMatch = allPresets.find(p => p.toLowerCase().trim() === name.toLowerCase().trim());
+    const exactMatch = allPresets.find(
+        (p) => p.toLowerCase().trim() === name.toLowerCase().trim(),
+    );
 
     if (exactMatch) {
         console.log('Found exact preset match', exactMatch);
@@ -780,7 +936,7 @@ async function presetCommandCallback(_, name) {
 
             if (presetValue) {
                 presetManager.selectPreset(presetValue);
-                shouldReconnect && await waitForConnection();
+                shouldReconnect && (await waitForConnection());
             }
         }
 
@@ -803,7 +959,7 @@ async function presetCommandCallback(_, name) {
 
             if (currentPreset !== fuzzyPresetName) {
                 presetManager.selectPreset(fuzzyPresetValue);
-                shouldReconnect && await waitForConnection();
+                shouldReconnect && (await waitForConnection());
             }
         }
 
@@ -816,7 +972,11 @@ async function presetCommandCallback(_, name) {
  */
 async function waitForConnection() {
     try {
-        await waitUntilCondition(() => online_status !== 'no_connection', 10000, 100);
+        await waitUntilCondition(
+            () => online_status !== 'no_connection',
+            10000,
+            100,
+        );
     } catch {
         console.log('Timeout waiting for API to connect');
     }
@@ -825,18 +985,30 @@ async function waitForConnection() {
 export async function initPresetManager() {
     eventSource.on(event_types.CHAT_CHANGED, autoSelectPreset);
     registerPresetManagers();
-    SlashCommandParser.addCommandObject(SlashCommand.fromProps({
-        name: 'preset',
-        callback: presetCommandCallback,
-        returns: 'current preset',
-        unnamedArgumentList: [
-            SlashCommandArgument.fromProps({
-                description: 'name',
-                typeList: [ARGUMENT_TYPE.STRING],
-                enumProvider: () => getPresetManager().getAllPresets().map(preset => new SlashCommandEnumValue(preset, null, enumTypes.enum, enumIcons.preset)),
-            }),
-        ],
-        helpString: `
+    SlashCommandParser.addCommandObject(
+        SlashCommand.fromProps({
+            name: 'preset',
+            callback: presetCommandCallback,
+            returns: 'current preset',
+            unnamedArgumentList: [
+                SlashCommandArgument.fromProps({
+                    description: 'name',
+                    typeList: [ARGUMENT_TYPE.STRING],
+                    enumProvider: () =>
+                        getPresetManager()
+                            .getAllPresets()
+                            .map(
+                                (preset) =>
+                                    new SlashCommandEnumValue(
+                                        preset,
+                                        null,
+                                        enumTypes.enum,
+                                        enumIcons.preset,
+                                    ),
+                            ),
+                }),
+            ],
+            helpString: `
             <div>
                 Sets a preset by name for the current API. Gets the current preset if no name is provided.
             </div>
@@ -852,8 +1024,8 @@ export async function initPresetManager() {
                 </ul>
             </div>
         `,
-    }));
-
+        }),
+    );
 
     $(document).on('click', '[data-preset-manager-update]', async function () {
         const apiId = $(this).data('preset-manager-update');
@@ -888,15 +1060,28 @@ export async function initPresetManager() {
             return;
         }
 
-        const popupHeader = !presetManager.isAdvancedFormatting() ? t`Rename preset` : t`Rename template`;
+        const popupHeader = !presetManager.isAdvancedFormatting()
+            ? t`Rename preset`
+            : t`Rename template`;
         const oldName = presetManager.getSelectedPresetName();
-        const newName = await Popup.show.input(popupHeader, t`Enter a new name:`, oldName);
+        const newName = await Popup.show.input(
+            popupHeader,
+            t`Enter a new name:`,
+            oldName,
+        );
         if (!newName || oldName === newName) {
-            console.debug(!presetManager.isAdvancedFormatting() ? 'Preset rename cancelled' : 'Template rename cancelled');
+            console.debug(
+                !presetManager.isAdvancedFormatting()
+                    ? 'Preset rename cancelled'
+                    : 'Template rename cancelled',
+            );
             return;
         }
         if (equalsIgnoreCaseAndAccents(oldName, newName)) {
-            toastr.warning(t`Name not accepted, as it is the same as before (ignoring case and accents).`, t`Rename Preset`);
+            toastr.warning(
+                t`Name not accepted, as it is the same as before (ignoring case and accents).`,
+                t`Rename Preset`,
+            );
             return;
         }
 
@@ -908,7 +1093,9 @@ export async function initPresetManager() {
             return;
         }
 
-        const successToast = !presetManager.isAdvancedFormatting() ? t`Preset renamed` : t`Template renamed`;
+        const successToast = !presetManager.isAdvancedFormatting()
+            ? t`Preset renamed`
+            : t`Template renamed`;
         toastr.success(successToast);
     });
 
@@ -948,13 +1135,17 @@ export async function initPresetManager() {
             return;
         }
 
-        const fileName = file.name.replace('.json', '').replace('.settings', '');
+        const fileName = file.name
+            .replace('.json', '')
+            .replace('.settings', '');
         const data = await parseJsonFile(file);
         const name = data?.name ?? fileName;
         data['name'] = name;
 
         await presetManager.savePreset(name, data);
-        const successToast = !presetManager.isAdvancedFormatting() ? t`Preset imported` : t`Template imported`;
+        const successToast = !presetManager.isAdvancedFormatting()
+            ? t`Preset imported`
+            : t`Template imported`;
         toastr.success(successToast);
         e.target.value = null;
     });
@@ -968,8 +1159,13 @@ export async function initPresetManager() {
             return;
         }
 
-        const headerText = !presetManager.isAdvancedFormatting() ? t`Delete this preset?` : t`Delete this template?`;
-        const confirm = await Popup.show.confirm(headerText, t`This action is irreversible and your current settings will be overwritten.`);
+        const headerText = !presetManager.isAdvancedFormatting()
+            ? t`Delete this preset?`
+            : t`Delete this template?`;
+        const confirm = await Popup.show.confirm(
+            headerText,
+            t`This action is irreversible and your current settings will be overwritten.`,
+        );
         if (!confirm) {
             return;
         }
@@ -977,10 +1173,14 @@ export async function initPresetManager() {
         const result = await presetManager.deletePreset();
 
         if (result) {
-            const successToast = !presetManager.isAdvancedFormatting() ? t`Preset deleted` : t`Template deleted`;
+            const successToast = !presetManager.isAdvancedFormatting()
+                ? t`Preset deleted`
+                : t`Template deleted`;
             toastr.success(successToast);
         } else {
-            const warningToast = !presetManager.isAdvancedFormatting() ? t`Preset was not deleted from server` : t`Template was not deleted from server`;
+            const warningToast = !presetManager.isAdvancedFormatting()
+                ? t`Preset was not deleted from server`
+                : t`Template was not deleted from server`;
             toastr.warning(warningToast);
         }
 
@@ -1010,7 +1210,9 @@ export async function initPresetManager() {
 
         if (data.isDefault) {
             if (Object.keys(data.preset).length === 0) {
-                const errorToast = !presetManager.isAdvancedFormatting() ? t`Default preset cannot be restored` : t`Default template cannot be restored`;
+                const errorToast = !presetManager.isAdvancedFormatting()
+                    ? t`Default preset cannot be restored`
+                    : t`Default template cannot be restored`;
                 toastr.error(errorToast);
                 return;
             }
@@ -1018,7 +1220,10 @@ export async function initPresetManager() {
             const confirmText = !presetManager.isAdvancedFormatting()
                 ? t`Resetting a <b>default preset</b> will restore the default settings.`
                 : t`Resetting a <b>default template</b> will restore the default settings.`;
-            const confirm = await Popup.show.confirm(t`Are you sure?`, confirmText);
+            const confirm = await Popup.show.confirm(
+                t`Are you sure?`,
+                confirmText,
+            );
             if (!confirm) {
                 return;
             }
@@ -1027,20 +1232,27 @@ export async function initPresetManager() {
             await presetManager.savePreset(name, data.preset);
             const option = presetManager.findPreset(name);
             presetManager.selectPreset(option);
-            const successToast = !presetManager.isAdvancedFormatting() ? t`Default preset restored` : t`Default template restored`;
+            const successToast = !presetManager.isAdvancedFormatting()
+                ? t`Default preset restored`
+                : t`Default template restored`;
             toastr.success(successToast);
         } else {
             const confirmText = !presetManager.isAdvancedFormatting()
                 ? t`Resetting a <b>custom preset</b> will restore to the last saved state.`
                 : t`Resetting a <b>custom template</b> will restore to the last saved state.`;
-            const confirm = await Popup.show.confirm(t`Are you sure?`, confirmText);
+            const confirm = await Popup.show.confirm(
+                t`Are you sure?`,
+                confirmText,
+            );
             if (!confirm) {
                 return;
             }
 
             const option = presetManager.findPreset(name);
             presetManager.selectPreset(option);
-            const successToast = !presetManager.isAdvancedFormatting() ? t`Preset restored` : t`Template restored`;
+            const successToast = !presetManager.isAdvancedFormatting()
+                ? t`Preset restored`
+                : t`Template restored`;
             toastr.success(successToast);
         }
     });
